@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A658D7A5-E9F4-4BE4-84EC-711FDA93F18C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AdditionalMaps</RootNamespace>
+    <AssemblyName>AdditionalMaps</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="ModCommon">
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\Mods\ModCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="SeanprCore">
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\Mods\SeanprCore.dll</HintPath>
+    </Reference>
+    <Reference Include="SFCore">
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\Mods\SFCore.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="PlayMaker, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\PlayMaker.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Consts\TextureStrings.cs" />
+    <Compile Include="MonoBehaviours\GameMapHooks.cs" />
+    <Compile Include="MonoBehaviours\MapHelper.cs" />
+    <Compile Include="AmSettings.cs" />
+    <Compile Include="MonoBehaviours\MappedCustomRoom.cs" />
+    <Compile Include="Utils\ActualActionAction.cs" />
+    <Compile Include="Utils\ActualLogAction.cs" />
+    <Compile Include="Utils\FsmUtil.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Consts\LanguageStrings.cs" />
+    <Compile Include="AdditionalMaps.cs" />
+    <Compile Include="Utils\USceneUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Language.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\CustomArea.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\White_Palace\WP01.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP02.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP03.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP04.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP05.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP06.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP07.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP08.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP09.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP12.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP13.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP14.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP15.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP16.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP17.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP18.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP19.png" />
+    <EmbeddedResource Include="Resources\White_Palace\WP20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\White_Palace\White_Palace_Transparent.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\White_Palace\RWP01.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP02.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP03.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP04.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP05.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP06.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP07.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP08.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP09.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP12.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP13.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP14.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP15.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP16.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP17.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP18.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP19.png" />
+    <EmbeddedResource Include="Resources\White_Palace\RWP20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="ReadMe.md" />
+    <None Include="Resources\.gitignore" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>rem "Copy the Mod's dll into the Mods folder"
+      copy "$(ProjectDir)$(OutputPath)\$(ProjectName).dll" "E:\GOG\Hollow Knight Modded\hollow_knight_Data\Managed\Mods\$(ProjectName).dll"
+</PostBuildEvent>
+  </PropertyGroup>
+  <ProjectExtensions />
+</Project>
