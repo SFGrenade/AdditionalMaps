@@ -86,6 +86,14 @@ namespace AdditionalMaps.Consts
         private const string RealWP19File = "AdditionalMaps.Resources.White_Palace.RWP19.png";
         public const string RealWP20Key = "RWP20";
         private const string RealWP20File = "AdditionalMaps.Resources.White_Palace.RWP20.png";
+        public const string SM1Key = "SM1";
+        private const string SM1File = "AdditionalMaps.Resources.scattermaps1.png";
+        public const string SM2Key = "SM2";
+        private const string SM2File = "AdditionalMaps.Resources.scattermaps2.png";
+        public const string SM3Key = "SM3";
+        private const string SM3File = "AdditionalMaps.Resources.scattermaps3.png";
+        public const string MapKey = "MapIcon";
+        private const string MapFile = "AdditionalMaps.Resources.MapIcon.png";
         #endregion
 
         private Dictionary<string, Sprite> dict;
@@ -94,89 +102,53 @@ namespace AdditionalMaps.Consts
         {
             Assembly _asm = Assembly.GetExecutingAssembly();
             dict = new Dictionary<string, Sprite>();
-            string[] tmpTextureFiles = {
-                CustomAreaFile,
-                WP01File,
-                WP02File,
-                WP03File,
-                WP04File,
-                WP05File,
-                WP06File,
-                WP07File,
-                WP08File,
-                WP09File,
-                WP12File,
-                WP13File,
-                WP14File,
-                WP15File,
-                WP16File,
-                WP17File,
-                WP18File,
-                WP19File,
-                WP20File,
-                WPMapFile,
-                RealWP01File,
-                RealWP02File,
-                RealWP03File,
-                RealWP04File,
-                RealWP05File,
-                RealWP06File,
-                RealWP07File,
-                RealWP08File,
-                RealWP09File,
-                RealWP12File,
-                RealWP13File,
-                RealWP14File,
-                RealWP15File,
-                RealWP16File,
-                RealWP17File,
-                RealWP18File,
-                RealWP19File,
-                RealWP20File
-            };
-            string[] tmpTextureKeys = {
-                CustomAreaKey,
-                WP01Key,
-                WP02Key,
-                WP03Key,
-                WP04Key,
-                WP05Key,
-                WP06Key,
-                WP07Key,
-                WP08Key,
-                WP09Key,
-                WP12Key,
-                WP13Key,
-                WP14Key,
-                WP15Key,
-                WP16Key,
-                WP17Key,
-                WP18Key,
-                WP19Key,
-                WP20Key,
-                WPMapKey,
-                RealWP01Key,
-                RealWP02Key,
-                RealWP03Key,
-                RealWP04Key,
-                RealWP05Key,
-                RealWP06Key,
-                RealWP07Key,
-                RealWP08Key,
-                RealWP09Key,
-                RealWP12Key,
-                RealWP13Key,
-                RealWP14Key,
-                RealWP15Key,
-                RealWP16Key,
-                RealWP17Key,
-                RealWP18Key,
-                RealWP19Key,
-                RealWP20Key
-            };
-            for (int i = 0; i < tmpTextureFiles.Length; i++)
+            Dictionary<string, string> textureFiles = new Dictionary<string, string>();
+            textureFiles.Add(CustomAreaKey, CustomAreaFile);
+            textureFiles.Add(WP01Key, WP01File);
+            textureFiles.Add(WP02Key, WP02File);
+            textureFiles.Add(WP03Key, WP03File);
+            textureFiles.Add(WP04Key, WP04File);
+            textureFiles.Add(WP05Key, WP05File);
+            textureFiles.Add(WP06Key, WP06File);
+            textureFiles.Add(WP07Key, WP07File);
+            textureFiles.Add(WP08Key, WP08File);
+            textureFiles.Add(WP09Key, WP09File);
+            textureFiles.Add(WP12Key, WP12File);
+            textureFiles.Add(WP13Key, WP13File);
+            textureFiles.Add(WP14Key, WP14File);
+            textureFiles.Add(WP15Key, WP15File);
+            textureFiles.Add(WP16Key, WP16File);
+            textureFiles.Add(WP17Key, WP17File);
+            textureFiles.Add(WP18Key, WP18File);
+            textureFiles.Add(WP19Key, WP19File);
+            textureFiles.Add(WP20Key, WP20File);
+            textureFiles.Add(WPMapKey, WPMapFile);
+            textureFiles.Add(RealWP01Key, RealWP01File);
+            textureFiles.Add(RealWP02Key, RealWP02File);
+            textureFiles.Add(RealWP03Key, RealWP03File);
+            textureFiles.Add(RealWP04Key, RealWP04File);
+            textureFiles.Add(RealWP05Key, RealWP05File);
+            textureFiles.Add(RealWP06Key, RealWP06File);
+            textureFiles.Add(RealWP07Key, RealWP07File);
+            textureFiles.Add(RealWP08Key, RealWP08File);
+            textureFiles.Add(RealWP09Key, RealWP09File);
+            textureFiles.Add(RealWP12Key, RealWP12File);
+            textureFiles.Add(RealWP13Key, RealWP13File);
+            textureFiles.Add(RealWP14Key, RealWP14File);
+            textureFiles.Add(RealWP15Key, RealWP15File);
+            textureFiles.Add(RealWP16Key, RealWP16File);
+            textureFiles.Add(RealWP17Key, RealWP17File);
+            textureFiles.Add(RealWP18Key, RealWP18File);
+            textureFiles.Add(RealWP19Key, RealWP19File);
+            textureFiles.Add(RealWP20Key, RealWP20File);
+            textureFiles.Add(SM1Key, SM1File);
+            textureFiles.Add(SM2Key, SM2File);
+            textureFiles.Add(SM3Key, SM3File);
+            textureFiles.Add(MapKey, MapFile);
+
+            foreach (var pair in textureFiles)
             {
-                using (Stream s = _asm.GetManifestResourceStream(tmpTextureFiles[i]))
+                using (Stream s = _asm.GetManifestResourceStream(pair.Value))
                 {
                     if (s != null)
                     {
@@ -191,7 +163,8 @@ namespace AdditionalMaps.Consts
 
                         // Create sprite from texture
                         // Split is to cut off the TestOfTeamwork.Resources. and the .png
-                        dict.Add(tmpTextureKeys[i], Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f)));
+                        float pixelsPerUnit = pair.Value.Contains("scattermaps") ? 200 / 3 : 100;
+                        dict.Add(pair.Key, Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), pixelsPerUnit, 0, SpriteMeshType.FullRect));
                     }
                 }
             }

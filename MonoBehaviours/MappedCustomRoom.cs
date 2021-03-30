@@ -1,57 +1,33 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using GlobalEnums;
-using Modding;
-using ModCommon;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Audio;
-using HutongGames.PlayMaker;
-using HutongGames.PlayMaker.Actions;
-using System.Security.Cryptography;
-using AdditionalMaps.Consts;
-using AdditionalMaps.Utils;
-using SFCore;
-using TMPro;
-using On;
-using Logger = Modding.Logger;
-using UnityEngine.SceneManagement;
-using ModCommon.Util;
-using UObject = UnityEngine.Object;
+﻿using UnityEngine;
 
 namespace AdditionalMaps.MonoBehaviours
 {
-    class MappedCustomRoom : Component
+    internal class MappedCustomRoom : Component
     {
-        public PlayerData pd;
+        public bool fullSpriteDisplayed;
         private GameManager gm;
-		public bool fullSpriteDisplayed;
+        public PlayerData pd;
 
-		private void Start()
-		{
-			this.gm = GameManager.instance;
-			this.pd = PlayerData.instance;
-		}
+        private void Start()
+        {
+            gm = GameManager.instance;
+            pd = PlayerData.instance;
+        }
 
-		private void OnEnable()
-		{
-			if (this.gm == null)
-			{
-				this.gm = GameManager.instance;
-			}
-			if (!this.fullSpriteDisplayed && (this.gm.playerData.scenesMapped.Contains(base.transform.name) || this.gm.playerData.mapAllRooms))
-			{
-				for (int i = 0; i < this.transform.childCount; i++)
-				{
-					var t = this.transform.GetChild(i);
-					t.gameObject.SetActive(true);
-				}
-				this.fullSpriteDisplayed = true;
-			}
-		}
-	}
+        private void OnEnable()
+        {
+            if (gm == null) gm = GameManager.instance;
+            if (!fullSpriteDisplayed &&
+                (gm.playerData.scenesMapped.Contains(transform.name) || gm.playerData.mapAllRooms))
+            {
+                for (var i = 0; i < transform.childCount; i++)
+                {
+                    var t = transform.GetChild(i);
+                    t.gameObject.SetActive(true);
+                }
+
+                fullSpriteDisplayed = true;
+            }
+        }
+    }
 }
