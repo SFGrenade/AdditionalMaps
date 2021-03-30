@@ -94,6 +94,14 @@ namespace AdditionalMaps.Consts
         private const string SM3File = "AdditionalMaps.Resources.scattermaps3.png";
         public const string MapKey = "MapIcon";
         private const string MapFile = "AdditionalMaps.Resources.MapIcon.png";
+        public const string GhAKey = "GG_Atrium";
+        private const string GhAFile = "AdditionalMaps.Resources.Godhome.GH0.png";
+        public const string GhArKey = "GG_Atrium_Roof";
+        private const string GhArFile = "AdditionalMaps.Resources.Godhome.GH1.png";
+        public const string RealGhAKey = "RGH0";
+        private const string RealGhAFile = "AdditionalMaps.Resources.Godhome.RGH0.png";
+        public const string RealGhArKey = "RGH1";
+        private const string RealGhArFile = "AdditionalMaps.Resources.Godhome.RGH1.png";
         #endregion
 
         private Dictionary<string, Sprite> dict;
@@ -145,6 +153,10 @@ namespace AdditionalMaps.Consts
             textureFiles.Add(SM2Key, SM2File);
             textureFiles.Add(SM3Key, SM3File);
             textureFiles.Add(MapKey, MapFile);
+            textureFiles.Add(GhAKey, GhAFile);
+            textureFiles.Add(GhArKey, GhArFile);
+            textureFiles.Add(RealGhAKey, RealGhAFile);
+            textureFiles.Add(RealGhArKey, RealGhArFile);
 
             foreach (var pair in textureFiles)
             {

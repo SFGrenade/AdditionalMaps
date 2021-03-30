@@ -34,6 +34,8 @@ namespace AdditionalMaps
         public static Material defaultSpriteMaterial { get; private set; }
 
         private GameObject shinyPrefab;
+        private PlayMakerFSM setCompassPointPrefab;
+        private PlayMakerFSM setCompassPointRoomPrefab;
 
         public override string GetVersion() => SFCore.Utils.Util.GetVersion(Assembly.GetExecutingAssembly());
 
@@ -44,7 +46,9 @@ namespace AdditionalMaps
                 new ValueTuple<string, string>("Crossroads_33", "scatter_map 1"), // 64
                 new ValueTuple<string, string>("Crossroads_33", "scatter_map 2"), // 64
                 new ValueTuple<string, string>("Crossroads_33", "scatter_map 3"), // 64
-                new ValueTuple<string, string>("Grimm_Divine", "Charm Holder")
+                new ValueTuple<string, string>("Grimm_Divine", "Charm Holder"),
+                new ValueTuple<string, string>("Town", "_Props/Stag_station/open/door_station"),
+                new ValueTuple<string, string>("Room_mapper", "_SceneManager")
             };
         }
 
@@ -67,6 +71,8 @@ namespace AdditionalMaps
                 UObject.Destroy(shinyPrefab.transform.GetChild(0).gameObject.GetComponent<PersistentBoolItem>());
             }
             SetInactive(shinyPrefab);
+            setCompassPointPrefab = preloadedObjects["Town"]["_Props/Stag_station/open/door_station"].LocateMyFSM("Set Compass Point");
+            setCompassPointRoomPrefab = preloadedObjects["Room_mapper"]["_SceneManager"].LocateMyFSM("map_isroom");
 
             initGlobalSettings();
             langStrings = new LanguageStrings();
@@ -129,7 +135,10 @@ namespace AdditionalMaps
 
             #region Prefabs
 
+            var areaNamePrefab = GameObject.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(0).gameObject);
+            areaNamePrefab.SetActive(false);
             var subAreaPrefab = GameObject.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(6).GetChild(0).gameObject);
+            subAreaPrefab.SetActive(false);
             var roomMat = UnityEngine.Object.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(1).GetComponent<SpriteRenderer>().material);
             defaultSpriteMaterial = roomMat;
             var benchPrefab = GameObject.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(3).GetChild(2).gameObject);
@@ -152,7 +161,7 @@ namespace AdditionalMaps
             AreaWhitePalace.name = "WHITE_PALACE";
             AreaWhitePalace.layer = 5;
             AreaWhitePalace.transform.localScale = Vector3.one;
-            AreaWhitePalace.transform.localPosition = new Vector3(-2.0f, 16f, gameMapBetter.areaCliffs.transform.localPosition.z);
+            AreaWhitePalace.transform.localPosition = new Vector3(-2.0f, 15f, gameMapBetter.areaCliffs.transform.localPosition.z);
 
             List<GameObject> wpScenes = new List<GameObject>() {
                 new GameObject("White_Palace_01", typeof(SpriteRenderer), typeof(RoughMapRoom), typeof(MappedCustomRoom)),
@@ -312,6 +321,15 @@ namespace AdditionalMaps
 
             #endregion
 
+            #region Area Name
+
+            var wpAreaNameArea = GameObject.Instantiate(areaNamePrefab, AreaWhitePalace.transform);
+            wpAreaNameArea.transform.localPosition = new Vector3(6.433125f, 1.6825f, wpAreaNameArea.transform.localPosition.z);
+            wpAreaNameArea.GetComponent<SetTextMeshProGameText>().convName = "WHITE_PALACE";
+            wpAreaNameArea.SetActive(true);
+
+            #endregion
+
             AreaWhitePalace.SetActive(true);
             tmpDict.Add(
                 "WHITE_PALACE",
@@ -320,6 +338,7 @@ namespace AdditionalMaps
                     areaGameObject = AreaWhitePalace,
                     cameraPosition = new Vector3(3.07f, -24.5f, 18f),
                     mapZoneStrings = new List<string>() { "WHITE_PALACE" },
+                    //playerDataBoolGotAreaMap = "AdditionalMapsGotWpMap"
                     playerDataBoolGotAreaMap = "AdditionalMapsGotWpMap"
                 }
             );
@@ -336,13 +355,14 @@ namespace AdditionalMaps
                 GameObject.Destroy(AreaGodhome.transform.GetChild(i).gameObject);
             }
 
-            AreaGodhome.name = "WHITE_PALACE";
+            AreaGodhome.name = "GODS_GLORY";
             AreaGodhome.layer = 5;
             AreaGodhome.transform.localScale = Vector3.one;
-            AreaGodhome.transform.localPosition = new Vector3(-2.0f, 16f, gameMapBetter.areaCliffs.transform.localPosition.z);
+            AreaGodhome.transform.localPosition = new Vector3(5.5f, 14.5f, gameMapBetter.areaCliffs.transform.localPosition.z);
 
             List<GameObject> ghScenes = new List<GameObject>() {
-                new GameObject("White_Palace_01", typeof(SpriteRenderer), typeof(RoughMapRoom), typeof(MappedCustomRoom)),
+                new GameObject("GG_Atrium", typeof(SpriteRenderer), typeof(RoughMapRoom), typeof(MappedCustomRoom)),
+                new GameObject("GG_Atrium_Roof", typeof(SpriteRenderer), typeof(RoughMapRoom), typeof(MappedCustomRoom)),
             };
             foreach (var sceneGo in ghScenes)
             {
@@ -358,15 +378,17 @@ namespace AdditionalMaps
                 var rmr = sceneGo.GetComponent<RoughMapRoom>();
                 rmr.fullSprite = sr.sprite;
             }
-            float ghSceneDivider = 500.0f + (100.0f / 3.0f);
-            ghScenes[0].transform.localPosition = new Vector3(-375 / ghSceneDivider, -2510 / ghSceneDivider, tmpChildZ);
+            ghScenes[0].transform.localPosition = new Vector3(0.3687f, -2.678f, tmpChildZ);
+            ghScenes[1].transform.localPosition = new Vector3(-0.708f, 0.65f, tmpChildZ);
 
             List<GameObject> ghRoomSprites = new List<GameObject>() {
-                new GameObject("RWP01", typeof(SpriteRenderer)),
+                new GameObject("RGH0", typeof(SpriteRenderer)),
+                new GameObject("RGH1", typeof(SpriteRenderer)),
             };
-            float ghRoomDivider = 5.333333f;
             ghRoomSprites[0].transform.SetParent(ghScenes[0].transform);
-            ghRoomSprites[0].transform.localPosition = new Vector3(0.23f / ghRoomDivider, 0.03333334f / ghRoomDivider);
+            ghRoomSprites[0].transform.localPosition = new Vector3(-0.408678f, 0.138f);
+            ghRoomSprites[1].transform.SetParent(ghScenes[1].transform);
+            ghRoomSprites[1].transform.localPosition = new Vector3(0.6480024f, -0.187f);
             foreach (var sprite in ghRoomSprites)
             {
                 sprite.layer = 5;
@@ -379,28 +401,30 @@ namespace AdditionalMaps
                 sr.sortingOrder = 0;
             }
 
-            //var pantheonArea = GameObject.Instantiate(subAreaPrefab, ghScenes[15].transform);
-            //pantheonArea.SetActive(true);
-            //pantheonArea.transform.localPosition = new Vector3(5.875f, -0.8f, pantheonArea.transform.localPosition.z);
-            //pantheonArea.GetComponent<SetTextMeshProGameText>().convName = LanguageStrings.PathOfPain_Key;
-
-            //var pohArea = GameObject.Instantiate(subAreaPrefab, ghScenes[15].transform);
-            //pohArea.SetActive(true);
-            //pohArea.transform.localPosition = new Vector3(5.875f, -0.8f, pohArea.transform.localPosition.z);
-            //pohArea.GetComponent<SetTextMeshProGameText>().convName = LanguageStrings.PathOfPain_Key;
-
-            //var creditsArea2 = GameObject.Instantiate(subAreaPrefab, ghScenes[6].transform);
-            //creditsArea2.SetActive(true);
-            //creditsArea2.transform.localPosition = new Vector3(7f, -1.5f, creditsArea2.transform.localPosition.z);
-            //creditsArea2.GetComponent<SetTextMeshProGameText>().convName = LanguageStrings.Credits_Key;
-            //var rectT2 = creditsArea2.GetComponent<RectTransform>();
-            //rectT2.sizeDelta = new Vector2(rectT2.sizeDelta.x + 1, rectT2.sizeDelta.y);
+            var creditsArea2 = GameObject.Instantiate(subAreaPrefab, ghScenes[0].transform);
+            creditsArea2.SetActive(true);
+            creditsArea2.transform.localPosition = new Vector3(8f, 1.5f, creditsArea2.transform.localPosition.z);
+            creditsArea2.GetComponent<SetTextMeshProGameText>().convName = LanguageStrings.Credits_Key;
+            var rectT2 = creditsArea2.GetComponent<RectTransform>();
+            rectT2.sizeDelta = new Vector2(rectT2.sizeDelta.x + 1, rectT2.sizeDelta.y);
 
             #region Benches
 
             var tmpBench = GameObject.Instantiate(benchPrefab, ghRoomSprites[0].transform);
-            tmpBench.transform.localPosition = new Vector3(-0.4f, -0.5f, -0.013f);
+            tmpBench.transform.localPosition = new Vector3(0.925f, 0.5f, -0.013f);
             tmpBench.SetActive(true);
+            var tmpBench2 = GameObject.Instantiate(benchPrefab, ghRoomSprites[1].transform);
+            tmpBench2.transform.localPosition = new Vector3(0.8f, -0.1f, -0.013f);
+            tmpBench2.SetActive(true);
+
+            #endregion
+
+            #region Area Name
+
+            var ghAreaNameArea = GameObject.Instantiate(areaNamePrefab, AreaGodhome.transform);
+            ghAreaNameArea.transform.localPosition = new Vector3(5.208f, 0.65f, ghAreaNameArea.transform.localPosition.z);
+            ghAreaNameArea.GetComponent<SetTextMeshProGameText>().convName = "GODS_GLORY";
+            ghAreaNameArea.SetActive(true);
 
             #endregion
 
@@ -410,10 +434,9 @@ namespace AdditionalMaps
                 new s_CustomArea()
                 {
                     areaGameObject = AreaGodhome,
-                    cameraPosition = new Vector3(3.07f, -24.5f, 18f),
+                    cameraPosition = new Vector3(-8.5f, -22f, 18f),
                     mapZoneStrings = new List<string>() { "GODS_GLORY" },
-                    //playerDataBoolGotAreaMap = "AdditionalMapsGotGhMap"
-                    playerDataBoolGotAreaMap = "hasDash"
+                    playerDataBoolGotAreaMap = "AdditionalMapsGotGhMap"
                 }
             );
 
@@ -445,73 +468,160 @@ namespace AdditionalMaps
 
         private List<string> sceneList = new List<string>()
         {
-            "White_Palace_08"
+            "White_Palace_08",
+            "GG_Atrium",
+            "GG_Workshop",
+            "GG_Blue_Room"
         };
         private void OnSceneManagerActiveSceneChanged(Scene from, Scene to)
         {
             if (!sceneList.Contains(to.name)) return;
 
             // ToDo make this optional
+            if (to.name.Equals("White_Palace_08"))
+            {
+                var sm = to.Find("_SceneManager").GetComponent<SceneManager>();
+                sm.mapZone = MapZone.WHITE_PALACE;
 
-            var sm = to.Find("_SceneManager").GetComponent<SceneManager>();
-            sm.mapZone = MapZone.WHITE_PALACE;
+                MakeSpriteGo("sm1", GetSprite(TextureStrings.SM1Key), new Vector3(104.28f, 21.07f, 0.1f), Vector3.zero);
+                MakeSpriteGo("sm2", GetSprite(TextureStrings.SM2Key), new Vector3(104.33f, 19.2f, 0.1f), new Vector3(0, 0, -1.374f));
+                MakeSpriteGo("sm2", GetSprite(TextureStrings.SM2Key), new Vector3(105.53f, 21.15f, 0.17f), new Vector3(0, 0, 14.291f));
+                MakeSpriteGo("sm3", GetSprite(TextureStrings.SM3Key), new Vector3(106.33f, 19.4f, 0.1f), Vector3.zero);
+                MakeSpriteGo("sm3", GetSprite(TextureStrings.SM3Key), new Vector3(106.83f, 21.15f, 0.1f), new Vector3(0, 0, -5.748f));
 
-            MakeSpriteGo("sm1", GetSprite(TextureStrings.SM1Key), new Vector3(104.28f, 21.07f, 0.1f), Vector3.zero);
-            MakeSpriteGo("sm2", GetSprite(TextureStrings.SM2Key), new Vector3(104.33f, 19.2f, 0.1f), new Vector3(0, 0, -1.374f));
-            MakeSpriteGo("sm2", GetSprite(TextureStrings.SM2Key), new Vector3(105.53f, 21.15f, 0.17f), new Vector3(0, 0, 14.291f));
-            MakeSpriteGo("sm3", GetSprite(TextureStrings.SM3Key), new Vector3(106.33f, 19.4f, 0.1f), Vector3.zero);
-            MakeSpriteGo("sm3", GetSprite(TextureStrings.SM3Key), new Vector3(106.83f, 21.15f, 0.1f), new Vector3(0, 0, -5.748f));
+                #region Shiny FSM
 
-            #region Shiny FSM
+                GameObject shinyParent = GameObject.Instantiate(shinyPrefab);
+                shinyParent.name = "Map";
+                shinyParent.SetActive(false);
+                shinyParent.transform.GetChild(0).gameObject.SetActive(true);
+                shinyParent.transform.position = new Vector3(105.53f, 19.51f, 0.05f);
+                //shinyParent.transform.position = new Vector3(55, 47, 0.05f);
 
-            GameObject shinyParent = GameObject.Instantiate(shinyPrefab);
-            shinyParent.name = "Map";
-            shinyParent.SetActive(false);
-            shinyParent.transform.GetChild(0).gameObject.SetActive(true);
-            shinyParent.transform.position = new Vector3(105.53f, 19.51f, 0.05f);
-            //shinyParent.transform.position = new Vector3(55, 47, 0.05f);
+                PlayMakerFSM shinyFsm = shinyParent.transform.GetChild(0).gameObject.LocateMyFSM("Shiny Control");
+                FsmVariables shinyFsmVars = shinyFsm.FsmVariables;
+                shinyFsmVars.FindFsmInt("Charm ID").Value = 0;
+                shinyFsmVars.FindFsmInt("Type").Value = 0;
+                shinyFsmVars.FindFsmBool("Activated").Value = false;
+                shinyFsmVars.FindFsmBool("Charm").Value = false;
+                shinyFsmVars.FindFsmBool("Dash Cloak").Value = false;
+                shinyFsmVars.FindFsmBool("Exit Dream").Value = false;
+                shinyFsmVars.FindFsmBool("Fling L").Value = false;
+                shinyFsmVars.FindFsmBool("Fling On Start").Value = false;
+                shinyFsmVars.FindFsmBool("Journal").Value = false;
+                shinyFsmVars.FindFsmBool("King's Brand").Value = false;
+                shinyFsmVars.FindFsmBool("Mantis Claw").Value = false;
+                shinyFsmVars.FindFsmBool("Pure Seed").Value = false;
+                shinyFsmVars.FindFsmBool("Quake").Value = false;
+                shinyFsmVars.FindFsmBool("Show Charm Tute").Value = false;
+                shinyFsmVars.FindFsmBool("Slug Fling").Value = false;
+                shinyFsmVars.FindFsmBool("Super Dash").Value = false;
+                shinyFsmVars.FindFsmString("Item Name").Value = LanguageStrings.Wp_Map_Key;
+                shinyFsmVars.FindFsmString("PD Bool Name").Value = "AdditionalMapsGotWpMap";
 
-            PlayMakerFSM shinyFsm = shinyParent.transform.GetChild(0).gameObject.LocateMyFSM("Shiny Control");
-            FsmVariables shinyFsmVars = shinyFsm.FsmVariables;
-            shinyFsmVars.FindFsmInt("Charm ID").Value = 0;
-            shinyFsmVars.FindFsmInt("Type").Value = 0;
-            shinyFsmVars.FindFsmBool("Activated").Value = false;
-            shinyFsmVars.FindFsmBool("Charm").Value = false;
-            shinyFsmVars.FindFsmBool("Dash Cloak").Value = false;
-            shinyFsmVars.FindFsmBool("Exit Dream").Value = false;
-            shinyFsmVars.FindFsmBool("Fling L").Value = false;
-            shinyFsmVars.FindFsmBool("Fling On Start").Value = false;
-            shinyFsmVars.FindFsmBool("Journal").Value = false;
-            shinyFsmVars.FindFsmBool("King's Brand").Value = false;
-            shinyFsmVars.FindFsmBool("Mantis Claw").Value = false;
-            shinyFsmVars.FindFsmBool("Pure Seed").Value = false;
-            shinyFsmVars.FindFsmBool("Quake").Value = false;
-            shinyFsmVars.FindFsmBool("Show Charm Tute").Value = false;
-            shinyFsmVars.FindFsmBool("Slug Fling").Value = false;
-            shinyFsmVars.FindFsmBool("Super Dash").Value = false;
-            shinyFsmVars.FindFsmString("Item Name").Value = LanguageStrings.Map_Key;
-            shinyFsmVars.FindFsmString("PD Bool Name").Value = "AdditionalMapsGotWpMap";
+                IntSwitch isAction = shinyFsm.GetAction<IntSwitch>("Trinket Type", 0);
+                var tmpCompareTo = new List<FsmInt>(isAction.compareTo);
+                tmpCompareTo.Add(tmpCompareTo.Count + 1);
+                isAction.compareTo = tmpCompareTo.ToArray();
+                shinyFsmVars.FindFsmInt("Trinket Num").Value = tmpCompareTo.Count;
+                var tmpSendEvent = new List<FsmEvent>(isAction.sendEvent);
+                tmpSendEvent.Add(FsmEvent.FindEvent("PURE SEED"));
+                isAction.sendEvent = tmpSendEvent.ToArray();
 
-            IntSwitch isAction = shinyFsm.GetAction<IntSwitch>("Trinket Type", 0);
-            var tmpCompareTo = new List<FsmInt>(isAction.compareTo);
-            tmpCompareTo.Add(tmpCompareTo.Count + 1);
-            isAction.compareTo = tmpCompareTo.ToArray();
-            shinyFsmVars.FindFsmInt("Trinket Num").Value = tmpCompareTo.Count;
-            var tmpSendEvent = new List<FsmEvent>(isAction.sendEvent);
-            tmpSendEvent.Add(FsmEvent.FindEvent("PURE SEED"));
-            isAction.sendEvent = tmpSendEvent.ToArray();
+                shinyFsm.CopyState("Love Key", "Necklace");
 
-            shinyFsm.CopyState("Love Key", "Necklace");
+                shinyFsm.GetAction<SetPlayerDataBool>("Necklace", 0).boolName = "AdditionalMapsGotWpMap";
+                shinyFsm.GetAction<SetSpriteRendererSprite>("Necklace", 1).sprite = GetSprite(TextureStrings.MapKey);
+                shinyFsm.GetAction<GetLanguageString>("Necklace", 2).convName = LanguageStrings.Wp_Map_Key;
 
-            shinyFsm.GetAction<SetPlayerDataBool>("Necklace", 0).boolName = "AdditionalMapsGotWpMap";
-            shinyFsm.GetAction<SetSpriteRendererSprite>("Necklace", 1).sprite = GetSprite(TextureStrings.MapKey);
-            shinyFsm.GetAction<GetLanguageString>("Necklace", 2).convName = LanguageStrings.Map_Key;
+                shinyFsm.AddTransition("Trinket Type", "PURE SEED", "Necklace");
 
-            shinyFsm.AddTransition("Trinket Type", "PURE SEED", "Necklace");
+                shinyParent.SetActive(true);
 
-            shinyParent.SetActive(true);
+                #endregion
+            }
+            else if (to.name.Equals("GG_Atrium"))
+            {
+                var blueDoor = to.Find("door1_blueRoom");
+                setCompassPointPrefab.CopyOnto(blueDoor);
+                var fsm = blueDoor.LocateMyFSM("Set Compass Point");
+                fsm.Preprocess();
+                var workshopDoor = to.Find("Door_Workshop");
+                setCompassPointPrefab.CopyOnto(workshopDoor);
+                var fsm2 = workshopDoor.LocateMyFSM("Set Compass Point");
+                fsm2.Preprocess();
 
-            #endregion
+                #region Shiny FSM
+
+                GameObject shinyParent = GameObject.Instantiate(shinyPrefab);
+                shinyParent.name = "Map";
+                shinyParent.SetActive(false);
+                shinyParent.transform.GetChild(0).gameObject.SetActive(true);
+                shinyParent.transform.position = new Vector3(118.03f, 60.51f, 0.05f);
+                //shinyParent.transform.position = new Vector3(55, 47, 0.05f);
+
+                PlayMakerFSM shinyFsm = shinyParent.transform.GetChild(0).gameObject.LocateMyFSM("Shiny Control");
+                FsmVariables shinyFsmVars = shinyFsm.FsmVariables;
+                shinyFsmVars.FindFsmInt("Charm ID").Value = 0;
+                shinyFsmVars.FindFsmInt("Type").Value = 0;
+                shinyFsmVars.FindFsmBool("Activated").Value = false;
+                shinyFsmVars.FindFsmBool("Charm").Value = false;
+                shinyFsmVars.FindFsmBool("Dash Cloak").Value = false;
+                shinyFsmVars.FindFsmBool("Exit Dream").Value = false;
+                shinyFsmVars.FindFsmBool("Fling L").Value = false;
+                shinyFsmVars.FindFsmBool("Fling On Start").Value = false;
+                shinyFsmVars.FindFsmBool("Journal").Value = false;
+                shinyFsmVars.FindFsmBool("King's Brand").Value = false;
+                shinyFsmVars.FindFsmBool("Mantis Claw").Value = false;
+                shinyFsmVars.FindFsmBool("Pure Seed").Value = false;
+                shinyFsmVars.FindFsmBool("Quake").Value = false;
+                shinyFsmVars.FindFsmBool("Show Charm Tute").Value = false;
+                shinyFsmVars.FindFsmBool("Slug Fling").Value = false;
+                shinyFsmVars.FindFsmBool("Super Dash").Value = false;
+                shinyFsmVars.FindFsmString("Item Name").Value = LanguageStrings.Gh_Map_Key;
+                shinyFsmVars.FindFsmString("PD Bool Name").Value = "AdditionalMapsGotGhMap";
+
+                IntSwitch isAction = shinyFsm.GetAction<IntSwitch>("Trinket Type", 0);
+                var tmpCompareTo = new List<FsmInt>(isAction.compareTo);
+                tmpCompareTo.Add(tmpCompareTo.Count + 1);
+                isAction.compareTo = tmpCompareTo.ToArray();
+                shinyFsmVars.FindFsmInt("Trinket Num").Value = tmpCompareTo.Count;
+                var tmpSendEvent = new List<FsmEvent>(isAction.sendEvent);
+                tmpSendEvent.Add(FsmEvent.FindEvent("PURE SEED"));
+                isAction.sendEvent = tmpSendEvent.ToArray();
+
+                shinyFsm.CopyState("Love Key", "Necklace");
+
+                shinyFsm.GetAction<SetPlayerDataBool>("Necklace", 0).boolName = "AdditionalMapsGotGhMap";
+                shinyFsm.GetAction<SetSpriteRendererSprite>("Necklace", 1).sprite = GetSprite(TextureStrings.MapKey);
+                shinyFsm.GetAction<GetLanguageString>("Necklace", 2).convName = LanguageStrings.Gh_Map_Key;
+
+                shinyFsm.AddTransition("Trinket Type", "PURE SEED", "Necklace");
+
+                shinyParent.SetActive(true);
+
+                #endregion
+            }
+            else if (to.name.Equals("GG_Workshop"))
+            {
+                var smGo = to.Find("_SceneManager");
+                setCompassPointRoomPrefab.CopyOnto(smGo);
+                var fsm = smGo.LocateMyFSM("map_isroom");
+                fsm.Preprocess();
+                //var fsmVars = fsm.FsmVariables;
+                //fsmVars.GetFsmString("Map Zone").Value = "GODS_GLORY";
+                //fsmVars.GetFsmString("Scene Name").Value = "GG_Atrium";
+            }
+            else if (to.name.Equals("GG_Blue_Room"))
+            {
+                var smGo = to.Find("_SceneManager");
+                setCompassPointRoomPrefab.CopyOnto(smGo);
+                var fsm = smGo.LocateMyFSM("map_isroom");
+                fsm.Preprocess();
+                //var fsmVars = fsm.FsmVariables;
+                //fsmVars.GetFsmString("Map Zone").Value = "GODS_GLORY";
+                //fsmVars.GetFsmString("Scene Name").Value = "GG_Atrium";
+            }
         }
 
         private void MakeSpriteGo(string name, Sprite sprite, Vector3 pos, Vector3 angles)
@@ -530,6 +640,7 @@ namespace AdditionalMaps
             if (self.FsmName.Equals("UI Control") && self.gameObject.name.Equals("World Map"))
             {
                 ChangeWpMap(self.gameObject, self.transform.GetChild(4).gameObject);
+                ChangeGhMap(self.gameObject, self.transform.GetChild(4).gameObject);
             }
         }
 
@@ -542,6 +653,10 @@ namespace AdditionalMaps
         private string OnLanguageGetHook(string key, string sheet)
         {
             //Log($"Sheet: {sheet}; Key: {key}");
+            if (key.ToUpper().Contains("GOD"))
+            {
+                Log($"Sheet: {sheet}; Key: {key}");
+            }
             if (langStrings.ContainsKey(key, sheet))
             {
                 return langStrings.Get(key, sheet);
@@ -616,7 +731,8 @@ namespace AdditionalMaps
 
             string customAreaName = "White_Palace";
             string boolName = "AdditionalMapsGotWpMap";
-            Vector3 position = new Vector3(2.07f, -20f, -22f);
+            Vector3 CameraZoomPosition = new Vector3(2.07f, -20f, -22f);
+            Vector3 MapAreaPosition = new Vector3(1.02f, -1.75f, -2.3f);
 
             bool tmpActive = wideMap.activeSelf;
             wideMap.SetActive(false);
@@ -638,7 +754,7 @@ namespace AdditionalMaps
             var customPart = GameObject.Instantiate(wideMap.transform.GetChild(0).gameObject, wideMap.transform, true);
             customPart.SetActive(false);
             customPart.name = customAreaName;
-            customPart.transform.localPosition = new Vector3(3.02f, -2.1f, -2.3f);
+            customPart.transform.localPosition = MapAreaPosition;
             customPart.GetComponent<SpriteRenderer>().sprite = GetSprite(TextureStrings.CustomAreaKey);
             customPart.GetComponentInChildren<SetTextMeshProGameText>().convName = customAreaName.ToUpper();
             customPart.transform.Find("Area Name").localPosition += new Vector3(-1.0f, 0, 0);
@@ -693,7 +809,7 @@ namespace AdditionalMaps
             worldMapFsm.GetAction<SendEventByName>(caState, 2).eventTarget = new FsmEventTarget() { target = FsmEventTarget.EventTarget.GameObject, gameObject = new FsmOwnerDefault() { OwnerOption = OwnerDefaultOption.SpecifyGameObject, GameObject = customPart } };
             worldMapFsm.GetAction<GetLanguageString>(caState, 3).convName = $"MAP_NAME_{customAreaName.ToUpper()}";
             worldMapFsm.GetAction<SetStringValue>(caState, 5).stringValue = customAreaName.ToUpper();
-            worldMapFsm.GetAction<SetVector3Value>(caState, 6).vector3Value = position;
+            worldMapFsm.GetAction<SetVector3Value>(caState, 6).vector3Value = CameraZoomPosition;
 
             worldMapFsm.InsertAction(extraUpState, new PlayerDataBoolTest() { gameObject = tmpGameObject, boolName = boolName, isTrue = customGlobalEvent }, 0);
             #endregion
@@ -722,9 +838,10 @@ namespace AdditionalMaps
         {
             DebugLog($"!ChangeWpMap: \"{wideMap}\"");
 
-            string customAreaName = "White_Palace";
-            string boolName = "AdditionalMapsGotWpMap";
-            Vector3 position = new Vector3(2.07f, -20f, -22f);
+            string customAreaName = "Godhome";
+            string boolName = "AdditionalMapsGotGhMap";
+            Vector3 CameraZoomPosition = new Vector3(-8.07f, -16f, -22f);
+            Vector3 MapAreaPostion = new Vector3(6.02f, -2f, -2.3f);
 
             bool tmpActive = wideMap.activeSelf;
             wideMap.SetActive(false);
@@ -738,7 +855,7 @@ namespace AdditionalMaps
             string caDownState = $"{customAreaName} State Down";
             string caZoomState = $"{customAreaName} State Zoom";
 
-            string extraUpState = "T Up";
+            string extraUpState = "Mi Up";
 
             #endregion
 
@@ -746,7 +863,7 @@ namespace AdditionalMaps
             var customPart = GameObject.Instantiate(wideMap.transform.GetChild(0).gameObject, wideMap.transform, true);
             customPart.SetActive(false);
             customPart.name = customAreaName;
-            customPart.transform.localPosition = new Vector3(3.02f, -2.1f, -2.3f);
+            customPart.transform.localPosition = MapAreaPostion;
             customPart.GetComponent<SpriteRenderer>().sprite = GetSprite(TextureStrings.CustomAreaKey);
             customPart.GetComponentInChildren<SetTextMeshProGameText>().convName = customAreaName.ToUpper();
             customPart.transform.Find("Area Name").localPosition += new Vector3(-1.0f, 0, 0);
@@ -766,13 +883,13 @@ namespace AdditionalMaps
             #region Create Custom States
             worldMapFsm.CopyState("Mines", caState);
 
-            worldMapFsm.CopyState("T Left", caLeftState);
-            worldMapFsm.CopyState("T Right", caRightState);
+            worldMapFsm.CopyState("Mi Left", caLeftState);
+            worldMapFsm.CopyState("Mi Right", caRightState);
 
-            worldMapFsm.CopyState("Mi Left", caDownState);
-            worldMapFsm.CopyState("To Zoom 10", caZoomState);
+            worldMapFsm.CopyState("T Right", caDownState);
+            worldMapFsm.CopyState("To Zoom 11", caZoomState);
 
-            worldMapFsm.CopyState("CR Up", extraUpState);
+            worldMapFsm.CopyState("RG Up", extraUpState);
             #endregion
 
             #region Add Custom FSM Variable
@@ -801,7 +918,7 @@ namespace AdditionalMaps
             worldMapFsm.GetAction<SendEventByName>(caState, 2).eventTarget = new FsmEventTarget() { target = FsmEventTarget.EventTarget.GameObject, gameObject = new FsmOwnerDefault() { OwnerOption = OwnerDefaultOption.SpecifyGameObject, GameObject = customPart } };
             worldMapFsm.GetAction<GetLanguageString>(caState, 3).convName = $"MAP_NAME_{customAreaName.ToUpper()}";
             worldMapFsm.GetAction<SetStringValue>(caState, 5).stringValue = customAreaName.ToUpper();
-            worldMapFsm.GetAction<SetVector3Value>(caState, 6).vector3Value = position;
+            worldMapFsm.GetAction<SetVector3Value>(caState, 6).vector3Value = CameraZoomPosition;
 
             worldMapFsm.InsertAction(extraUpState, new PlayerDataBoolTest() { gameObject = tmpGameObject, boolName = boolName, isTrue = customGlobalEvent }, 0);
             #endregion
@@ -814,10 +931,10 @@ namespace AdditionalMaps
             worldMapFsm.ChangeTransition(caRightState, "FINISHED", caState);
             worldMapFsm.ChangeTransition(caDownState, "FINISHED", caState);
 
-            worldMapFsm.AddTransition("Town", "UI UP", extraUpState);
-            worldMapFsm.ChangeTransition("Town", "UI UP", extraUpState);
-            worldMapFsm.AddTransition(extraUpState, "FINISHED", "Town");
-            worldMapFsm.ChangeTransition(extraUpState, "FINISHED", "Town");
+            worldMapFsm.AddTransition("Mines", "UI UP", extraUpState);
+            worldMapFsm.ChangeTransition("Mines", "UI UP", extraUpState);
+            worldMapFsm.AddTransition(extraUpState, "FINISHED", "Mines");
+            worldMapFsm.ChangeTransition(extraUpState, "FINISHED", "Mines");
 
             var worldMapFsmVars = worldMapFsm.FsmVariables;
             #endregion

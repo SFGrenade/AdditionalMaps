@@ -13,10 +13,11 @@ namespace AdditionalMaps.Consts
         public const string PathOfPain_Key = "PathOfPainArea";
         public const string Workshop_Key = "WorkshopArea";
         public const string Credits_Key = "CreditsArea";
-        public const string Map_Key = "SFGrenadeAdditionalMaps_WpMapName";
+        public const string Wp_Map_Key = "SFGrenadeAdditionalMaps_WpMapName";
 
         public const string Pantheon_Key = "PantheonArea";
         public const string PoH_Key = "PohArea";
+        public const string Gh_Map_Key = "SFGrenadeAdditionalMaps_GhMapName";
         #endregion
 
         private Dictionary<string, Dictionary<string, Dictionary<string, string>>> jsonDict;

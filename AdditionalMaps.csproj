@@ -90,6 +90,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComponentUtil.cs" />
     <Compile Include="Consts\TextureStrings.cs" />
     <Compile Include="MonoBehaviours\GameMapHooks.cs" />
     <Compile Include="AmSettings.cs" />
@@ -163,6 +164,13 @@
     <EmbeddedResource Include="Resources\scattermaps1.png" />
     <EmbeddedResource Include="Resources\scattermaps2.png" />
     <EmbeddedResource Include="Resources\scattermaps3.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Godhome\GH0.png" />
+    <EmbeddedResource Include="Resources\Godhome\GH1.png" />
+    <EmbeddedResource Include="Resources\Godhome\RGH0.png" />
+    <EmbeddedResource Include="Resources\Godhome\RGH1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
