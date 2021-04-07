@@ -1,3 +1,3 @@
 # AdditionalMaps
 
-This is a mod for the game Hollow Knight
+A mod that adds maps for the White Palace and Godhome.
