@@ -24,7 +24,7 @@ namespace AdditionalMaps
     {
         internal static AdditionalMaps Instance;
 
-        public LanguageStrings langStrings { get; private set; }
+        public Consts.LanguageStrings langStrings { get; private set; }
         public TextureStrings spriteDict { get; private set; }
 
         private GameManager gm;
@@ -75,7 +75,7 @@ namespace AdditionalMaps
             setCompassPointRoomPrefab = preloadedObjects["Room_mapper"]["_SceneManager"].LocateMyFSM("map_isroom");
 
             initGlobalSettings();
-            langStrings = new LanguageStrings();
+            langStrings = new Consts.LanguageStrings();
             spriteDict = new TextureStrings();
             initCallbacks();
 
@@ -293,17 +293,17 @@ namespace AdditionalMaps
             var pathOfPainArea = GameObject.Instantiate(subAreaPrefab, wpScenes[15].transform);
             pathOfPainArea.SetActive(true);
             pathOfPainArea.transform.localPosition = new Vector3(5.875f, -0.8f, pathOfPainArea.transform.localPosition.z);
-            pathOfPainArea.GetComponent<SetTextMeshProGameText>().convName = LanguageStrings.PathOfPain_Key;
+            pathOfPainArea.GetComponent<SetTextMeshProGameText>().convName = Consts.LanguageStrings.PathOfPain_Key;
 
             var workshopArea = GameObject.Instantiate(subAreaPrefab, wpScenes[7].transform);
             workshopArea.SetActive(true);
             workshopArea.transform.localPosition = new Vector3(5f, -1.25f, workshopArea.transform.localPosition.z);
-            workshopArea.GetComponent<SetTextMeshProGameText>().convName = LanguageStrings.Workshop_Key;
+            workshopArea.GetComponent<SetTextMeshProGameText>().convName = Consts.LanguageStrings.Workshop_Key;
 
             var creditsArea = GameObject.Instantiate(subAreaPrefab, wpScenes[6].transform);
             creditsArea.SetActive(true);
             creditsArea.transform.localPosition = new Vector3(7f, -1.5f, creditsArea.transform.localPosition.z);
-            creditsArea.GetComponent<SetTextMeshProGameText>().convName = LanguageStrings.Credits_Key;
+            creditsArea.GetComponent<SetTextMeshProGameText>().convName = Consts.LanguageStrings.Credits_Key;
             var rectT = creditsArea.GetComponent<RectTransform>();
             rectT.sizeDelta = new Vector2(rectT.sizeDelta.x + 1, rectT.sizeDelta.y);
 
@@ -404,7 +404,7 @@ namespace AdditionalMaps
             var creditsArea2 = GameObject.Instantiate(subAreaPrefab, ghScenes[0].transform);
             creditsArea2.SetActive(true);
             creditsArea2.transform.localPosition = new Vector3(8f, 1.5f, creditsArea2.transform.localPosition.z);
-            creditsArea2.GetComponent<SetTextMeshProGameText>().convName = LanguageStrings.Credits_Key;
+            creditsArea2.GetComponent<SetTextMeshProGameText>().convName = Consts.LanguageStrings.Credits_Key;
             var rectT2 = creditsArea2.GetComponent<RectTransform>();
             rectT2.sizeDelta = new Vector2(rectT2.sizeDelta.x + 1, rectT2.sizeDelta.y);
 
@@ -460,9 +460,9 @@ namespace AdditionalMaps
         private void initCallbacks()
         {
             // Hooks
-            ModHooks.Instance.LanguageGetHook += OnLanguageGetHook;
-            ModHooks.Instance.GetPlayerBoolHook += OnGetPlayerBoolHook;
-            ModHooks.Instance.SetPlayerBoolHook += OnSetPlayerBoolHook;
+            ModHooks.LanguageGetHook += OnLanguageGetHook;
+            ModHooks.GetPlayerBoolHook += OnGetPlayerBoolHook;
+            ModHooks.SetPlayerBoolHook += OnSetPlayerBoolHook;
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += OnSceneManagerActiveSceneChanged;
         }
 
@@ -516,7 +516,7 @@ namespace AdditionalMaps
                 shinyFsmVars.FindFsmBool("Show Charm Tute").Value = false;
                 shinyFsmVars.FindFsmBool("Slug Fling").Value = false;
                 shinyFsmVars.FindFsmBool("Super Dash").Value = false;
-                shinyFsmVars.FindFsmString("Item Name").Value = LanguageStrings.Wp_Map_Key;
+                shinyFsmVars.FindFsmString("Item Name").Value = Consts.LanguageStrings.Wp_Map_Key;
                 shinyFsmVars.FindFsmString("PD Bool Name").Value = "AdditionalMapsGotWpMap";
 
                 IntSwitch isAction = shinyFsm.GetAction<IntSwitch>("Trinket Type", 0);
@@ -532,7 +532,7 @@ namespace AdditionalMaps
 
                 shinyFsm.GetAction<SetPlayerDataBool>("Necklace", 0).boolName = "AdditionalMapsGotWpMap";
                 shinyFsm.GetAction<SetSpriteRendererSprite>("Necklace", 1).sprite = GetSprite(TextureStrings.MapKey);
-                shinyFsm.GetAction<GetLanguageString>("Necklace", 2).convName = LanguageStrings.Wp_Map_Key;
+                shinyFsm.GetAction<GetLanguageString>("Necklace", 2).convName = Consts.LanguageStrings.Wp_Map_Key;
 
                 shinyFsm.AddTransition("Trinket Type", "PURE SEED", "Necklace");
 
@@ -578,7 +578,7 @@ namespace AdditionalMaps
                 shinyFsmVars.FindFsmBool("Show Charm Tute").Value = false;
                 shinyFsmVars.FindFsmBool("Slug Fling").Value = false;
                 shinyFsmVars.FindFsmBool("Super Dash").Value = false;
-                shinyFsmVars.FindFsmString("Item Name").Value = LanguageStrings.Gh_Map_Key;
+                shinyFsmVars.FindFsmString("Item Name").Value = Consts.LanguageStrings.Gh_Map_Key;
                 shinyFsmVars.FindFsmString("PD Bool Name").Value = "AdditionalMapsGotGhMap";
 
                 IntSwitch isAction = shinyFsm.GetAction<IntSwitch>("Trinket Type", 0);
@@ -594,7 +594,7 @@ namespace AdditionalMaps
 
                 shinyFsm.GetAction<SetPlayerDataBool>("Necklace", 0).boolName = "AdditionalMapsGotGhMap";
                 shinyFsm.GetAction<SetSpriteRendererSprite>("Necklace", 1).sprite = GetSprite(TextureStrings.MapKey);
-                shinyFsm.GetAction<GetLanguageString>("Necklace", 2).convName = LanguageStrings.Gh_Map_Key;
+                shinyFsm.GetAction<GetLanguageString>("Necklace", 2).convName = Consts.LanguageStrings.Gh_Map_Key;
 
                 shinyFsm.AddTransition("Trinket Type", "PURE SEED", "Necklace");
 
@@ -650,58 +650,51 @@ namespace AdditionalMaps
         }
 
         #region Get/Set Hooks
-        private string OnLanguageGetHook(string key, string sheet)
+        private string OnLanguageGetHook(string key, string sheet, string orig)
         {
             //Log($"Sheet: {sheet}; Key: {key}");
-            if (key.ToUpper().Contains("GOD"))
-            {
-                Log($"Sheet: {sheet}; Key: {key}");
-            }
             if (langStrings.ContainsKey(key, sheet))
             {
                 return langStrings.Get(key, sheet);
             }
-            return Language.Language.GetInternal(key, sheet);
+            return orig;
         }
 
         private bool HasGetSettingsValue<T>(string target)
         {
-            var tmpField = _saveSettingsType.GetField(target);
+            var tmpField = ReflectionHelper.GetFieldInfo(typeof(AmSaveSettings), target);
             return tmpField != null && tmpField.FieldType == typeof(T);
         }
         private T GetSettingsValue<T>(string target)
         {
-            var tmpField = _saveSettingsType.GetField(target);
-            return (T) tmpField.GetValue(_saveSettings);
+            return ReflectionHelper.GetField<AmSaveSettings, T>(target);
         }
         private void SetSettingsValue<T>(string target, T val)
         {
-            var tmpField = _saveSettingsType.GetField(target);
-            tmpField.SetValue(_saveSettings, val);
+            ReflectionHelper.SetField<AmSaveSettings, T>(target, val);
         }
 
-        private bool OnGetPlayerBoolHook(string target)
+        private bool OnGetPlayerBoolHook(string target, bool orig)
         {
             if (HasGetSettingsValue<bool>(target))
             {
                 return GetSettingsValue<bool>(target);
             }
-            return PlayerData.instance.GetBoolInternal(target);
+            return orig;
         }
-        private void OnSetPlayerBoolHook(string target, bool val)
+        private bool OnSetPlayerBoolHook(string target, bool orig)
         {
             if (HasGetSettingsValue<bool>(target))
             {
-                SetSettingsValue<bool>(target, val);
+                SetSettingsValue<bool>(target, orig);
                 // trigger map updated thing
                 GameManager.instance.UpdateGameMap();
                 GameObject.FindObjectOfType<GameMap>().SetupMap(false);
 
                 Resources.FindObjectsOfTypeAll<Transform>().First(t => t.gameObject.name.Equals("Map Update Msg"))
                     .gameObject.Spawn(Vector3.zero);
-                return;
             }
-            PlayerData.instance.SetBoolInternal(target, val);
+            return orig;
         }
 
         private int OnGetPlayerIntHook(string target)

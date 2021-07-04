@@ -339,12 +339,12 @@ namespace AdditionalMaps.MonoBehaviours
         protected static void NewPositionCompass(On.GameMap.orig_PositionCompass orig, GameMap self, bool posShade)
         {
             GameObject gameObject = null;
-            var currentMapZone = ReflectionHelper.GetAttr<GameMap, GameManager>(self, "gm").GetCurrentMapZone();
+            var currentMapZone = ReflectionHelper.GetField<GameMap, GameManager>(self, "gm").GetCurrentMapZone();
 
             string sceneName;
             if (!self.inRoom)
             {
-                sceneName = ReflectionHelper.GetAttr<GameMap, GameManager>(self, "gm").sceneName;
+                sceneName = ReflectionHelper.GetField<GameMap, GameManager>(self, "gm").sceneName;
             }
             else
             {
@@ -437,16 +437,16 @@ namespace AdditionalMaps.MonoBehaviours
                     new Vector3(self.currentScene.transform.localPosition.x + gameObject.transform.localPosition.x,
                         self.currentScene.transform.localPosition.y + gameObject.transform.localPosition.y, 0f);
 
-                if (!posShade && !ReflectionHelper.GetAttr<GameMap, bool>(self, "posGate"))
+                if (!posShade && !ReflectionHelper.GetField<GameMap, bool>(self, "posGate"))
                 {
-                    if (ReflectionHelper.GetAttr<GameMap, PlayerData>(self, "pd").GetBool("equippedCharm_2"))
+                    if (ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").GetBool("equippedCharm_2"))
                     {
-                        ReflectionHelper.SetAttr(self, "displayingCompass", true);
+                        ReflectionHelper.SetField(self, "displayingCompass", true);
                         self.compassIcon.SetActive(true);
                     }
                     else
                     {
-                        ReflectionHelper.SetAttr(self, "displayingCompass", false);
+                        ReflectionHelper.SetField(self, "displayingCompass", false);
                         self.compassIcon.SetActive(false);
                     }
                 }
@@ -473,15 +473,15 @@ namespace AdditionalMaps.MonoBehaviours
                         self.shadeMarker.transform.localPosition = new Vector3(x, y, 0f);
                     }
 
-                    ReflectionHelper.GetAttr<GameMap, PlayerData>(self, "pd").SetVector3("shadeMapPos",
+                    ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").SetVector3("shadeMapPos",
                         new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f));
                 }
 
-                if (ReflectionHelper.GetAttr<GameMap, bool>(self, "posGate"))
+                if (ReflectionHelper.GetField<GameMap, bool>(self, "posGate"))
                 {
                     self.dreamGateMarker.transform.localPosition =
                         new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f);
-                    ReflectionHelper.GetAttr<GameMap, PlayerData>(self, "pd").SetVector3("dreamgateMapPos",
+                    ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").SetVector3("dreamgateMapPos",
                         new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f));
                 }
             }
@@ -490,9 +490,9 @@ namespace AdditionalMaps.MonoBehaviours
                 Debug.Log("Couldn't find current scene object!");
                 if (posShade)
                 {
-                    ReflectionHelper.GetAttr<GameMap, PlayerData>(self, "pd")
+                    ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd")
                         .SetVector3("shadeMapPos", new Vector3(-10000f, -10000f, 0f));
-                    self.shadeMarker.transform.localPosition = ReflectionHelper.GetAttr<GameMap, PlayerData>(self, "pd")
+                    self.shadeMarker.transform.localPosition = ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd")
                         .GetVector3("shadeMapPos");
                 }
             }
