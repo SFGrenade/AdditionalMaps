@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GlobalEnums;
 using HutongGames.PlayMaker.Actions;
 using Modding;
@@ -10,8 +11,7 @@ using Object = UnityEngine.Object;
 
 namespace AdditionalMaps.MonoBehaviours
 {
-
-    public struct s_CustomArea
+    public struct SCustomArea
     {
         public GameObject areaGameObject;
         public Vector3 cameraPosition;
@@ -27,12 +27,12 @@ namespace AdditionalMaps.MonoBehaviours
 
     public class GameMapHooks
     {
-        protected static Dictionary<string, s_CustomArea> customAreas = new Dictionary<string, s_CustomArea>();
+        protected static Dictionary<string, SCustomArea> customAreas = new();
 
-        protected static List<Func<GameMap, Dictionary<string, s_CustomArea>>> callbacks =
-            new List<Func<GameMap, Dictionary<string, s_CustomArea>>>();
+        protected static List<Func<GameMap, Dictionary<string, SCustomArea>>> callbacks =
+            new();
 
-        public static void Init(Func<GameMap, Dictionary<string, s_CustomArea>> callback = null)
+        public static void Init(Func<GameMap, Dictionary<string, SCustomArea>> callback = null)
         {
             try
             {
@@ -40,6 +40,7 @@ namespace AdditionalMaps.MonoBehaviours
             }
             catch (Exception)
             {
+                // ignored
             }
 
             On.GameManager.SetGameMap += OnGameManagerSetGameMap;
@@ -71,10 +72,10 @@ namespace AdditionalMaps.MonoBehaviours
         }
 
         protected static void OnGameManagerSetGameMap(On.GameManager.orig_SetGameMap orig, GameManager self,
-            GameObject go_gameMap)
+            GameObject goGameMap)
         {
-            ReplaceComponent(go_gameMap);
-            orig(self, go_gameMap);
+            ReplaceComponent(goGameMap);
+            orig(self, goGameMap);
         }
 
         protected static void ReplaceComponent(GameObject gameMapGameObject)
@@ -90,15 +91,15 @@ namespace AdditionalMaps.MonoBehaviours
             Log("Got " + callbacks.Count + " callbacks!");
             foreach (var tmp in callbacks)
             {
-                GameObject.DontDestroyOnLoad(gameMapGameObject);
-                var customAreas = tmp.Invoke(gameMapGameObject.GetComponent<GameMap>());
-                Log("Got " + customAreas.Count + " custom Areas!");
-                foreach (var pair in customAreas)
+                Object.DontDestroyOnLoad(gameMapGameObject);
+                var callbackAreas = tmp.Invoke(gameMapGameObject.GetComponent<GameMap>());
+                Log("Got " + callbackAreas.Count + " custom Areas!");
+                foreach (var (areaKey, areaStruct) in callbackAreas)
                 {
-                    Log("Name: " + pair.Key);
-                    GameMapHooks.customAreas.Add(pair.Key, pair.Value);
-                    Object.DontDestroyOnLoad(pair.Value.areaGameObject);
-                    pair.Value.areaGameObject.transform.SetParent(gameMapGameObject.transform);
+                    Log("Name: " + areaKey);
+                    customAreas.Add(areaKey, areaStruct);
+                    Object.DontDestroyOnLoad(areaStruct.areaGameObject);
+                    areaStruct.areaGameObject.transform.SetParent(gameMapGameObject.transform);
                 }
             }
 
@@ -137,7 +138,7 @@ namespace AdditionalMaps.MonoBehaviours
                 Log($"Adding state {pair.Key}");
 
                 // Make State
-                var prefabState = "Cliffs";
+                const string prefabState = "Cliffs";
                 quickMapFsm.CopyState(prefabState, pair.Key);
                 quickMapFsm.GetAction<PlayerDataBoolTest>(pair.Key, 0).boolName = pair.Value.playerDataBoolGotAreaMap;
                 quickMapFsm.GetAction<GetLanguageString>(pair.Key, 1).convName = pair.Key;
@@ -154,25 +155,26 @@ namespace AdditionalMaps.MonoBehaviours
                 //fsmCMPAction.parameters = new FsmVar[] { new FsmVar() { NamedVar = quickMapFsmVars.FindFsmString("Map Zone") } };
                 //fsmCMPAction.storeResult = new FsmVar() { NamedVar = quickMapFsmVars.FindFsmBool("Check Area Return") };
 
-                var fsmAAAction = new ActionAction<ActionArg>();
-                fsmAAAction.arg = new ActionArg()
+                var fsmAaAction = new ActionAction<ActionArg>
                 {
-                    go = gameMapGameObject,
-                    fsmString = quickMapFsmVars.FindFsmString("Map Zone")
+                    arg = new ActionArg()
+                    {
+                        go = gameMapGameObject, fsmString = quickMapFsmVars.FindFsmString("Map Zone")
+                    },
+                    action = QuickMapNew
                 };
-                fsmAAAction.action = QuickMapNew;
-
-                //quickMapFsm.InsertAction(pair.Key, fsmCMPAction, (prefabState == "Cliffs") ? 5 : 6);
-                quickMapFsm.InsertAction(pair.Key, fsmAAAction, prefabState == "Cliffs" ? 5 : 6);
-                quickMapFsm.RemoveAction(pair.Key, prefabState == "Cliffs" ? 4 : 5);
+                
+                //quickMapFsm.InsertAction(pair.Key, fsmAaAction, prefabState == "Cliffs" ? 5 : 6);
+                quickMapFsm.InsertAction(pair.Key, fsmAaAction, 5);
+                //quickMapFsm.RemoveAction(pair.Key, prefabState == "Cliffs" ? 4 : 5);
+                quickMapFsm.RemoveAction(pair.Key, 4);
 
                 #endregion
 
                 // Make Transitions
-                foreach (var mapzoneName in pair.Value.mapZoneStrings)
+                foreach (var mapZoneName in pair.Value.mapZoneStrings)
                 {
-                    var eventname = mapzoneName;
-                    quickMapFsm.AddTransition("Check Area", eventname, pair.Key);
+                    quickMapFsm.AddTransition("Check Area", mapZoneName, pair.Key);
                 }
                 quickMapFsm.AddTransition(pair.Key, "CLOSE QUICK MAP", "Check State");
                 quickMapFsm.ChangeTransition(pair.Key, "CLOSE QUICK MAP", "Check State");
@@ -188,9 +190,9 @@ namespace AdditionalMaps.MonoBehaviours
             QuickMapNew(arg.go.GetComponent<GameMap>(), arg.fsmString.Value);
         }
 
-        public static void QuickMapNew(GameObject gameMapGO, string area)
+        public static void QuickMapNew(GameObject gameMapGo, string area)
         {
-            QuickMapNew(gameMapGO.GetComponent<GameMap>(), area);
+            QuickMapNew(gameMapGo.GetComponent<GameMap>(), area);
         }
 
         public static void QuickMapNew(GameMap self, string area)
@@ -203,9 +205,8 @@ namespace AdditionalMaps.MonoBehaviours
                 Log($"Area: \"{area}\"");
             }
 
-            foreach (var pair in customAreas)
-                if (pair.Value.areaGameObject != null)
-                    pair.Value.areaGameObject.SetActive(pair.Value.mapZoneStrings.Contains(area));
+            foreach (var (_, areaStruct) in customAreas.Where(pair => pair.Value.areaGameObject != null))
+                areaStruct.areaGameObject.SetActive(areaStruct.mapZoneStrings.Contains(area));
 
             self.PositionCompass(false);
 
@@ -235,12 +236,9 @@ namespace AdditionalMaps.MonoBehaviours
 
             var pd = PlayerData.instance;
             var currentMapZone = GameManager.instance.GetCurrentMapZone();
-            foreach (var pair in customAreas)
-                if (pd.GetBool(pair.Value.playerDataBoolGotAreaMap) || pair.Value.mapZoneStrings.Contains(currentMapZone) &&
-                    pd.GetBool("equippedCharm_2"))
-                    if (pd.GetBool(pair.Value.playerDataBoolGotAreaMap))
-                        if (pair.Value.areaGameObject != null)
-                            pair.Value.areaGameObject.SetActive(true);
+            foreach (var pair in from pair in customAreas where pd.GetBool(pair.Value.playerDataBoolGotAreaMap) || pair.Value.mapZoneStrings.Contains(currentMapZone) &&
+                pd.GetBool("equippedCharm_2") where pd.GetBool(pair.Value.playerDataBoolGotAreaMap) where pair.Value.areaGameObject != null select pair)
+                pair.Value.areaGameObject.SetActive(true);
         }
 
         public static void NewQuickMapAncientBasin(On.GameMap.orig_QuickMapAncientBasin orig, GameMap self)
@@ -433,9 +431,10 @@ namespace AdditionalMaps.MonoBehaviours
 
             if (self.currentScene != null)
             {
-                self.currentScenePos =
-                    new Vector3(self.currentScene.transform.localPosition.x + gameObject.transform.localPosition.x,
-                        self.currentScene.transform.localPosition.y + gameObject.transform.localPosition.y, 0f);
+                if (gameObject is not null)
+                    self.currentScenePos =
+                        new Vector3(self.currentScene.transform.localPosition.x + gameObject.transform.localPosition.x,
+                            self.currentScene.transform.localPosition.y + gameObject.transform.localPosition.y, 0f);
 
                 if (!posShade && !ReflectionHelper.GetField<GameMap, bool>(self, "posGate"))
                 {

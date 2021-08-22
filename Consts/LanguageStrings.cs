@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Reflection;
-using System.IO;
-using UnityEngine;
 
 namespace AdditionalMaps.Consts
 {
@@ -10,47 +8,43 @@ namespace AdditionalMaps.Consts
     {
         #region Language Strings
         // Places
-        public const string PathOfPain_Key = "PathOfPainArea";
-        public const string Workshop_Key = "WorkshopArea";
-        public const string Credits_Key = "CreditsArea";
-        public const string Wp_Map_Key = "SFGrenadeAdditionalMaps_WpMapName";
+        public const string PathOfPainKey = "PathOfPainArea";
+        public const string WorkshopKey = "WorkshopArea";
+        public const string CreditsKey = "CreditsArea";
+        public const string WpMapKey = "SFGrenadeAdditionalMaps_WpMapName";
 
-        public const string Pantheon_Key = "PantheonArea";
-        public const string PoH_Key = "PohArea";
-        public const string Gh_Map_Key = "SFGrenadeAdditionalMaps_GhMapName";
+        public const string PantheonKey = "PantheonArea";
+        public const string PoHKey = "PohArea";
+        public const string GhMapKey = "SFGrenadeAdditionalMaps_GhMapName";
         #endregion
 
-        private Dictionary<string, Dictionary<string, Dictionary<string, string>>> jsonDict;
+        private readonly Dictionary<string, Dictionary<string, Dictionary<string, string>>> _jsonDict;
 
         public LanguageStrings()
         {
-            Assembly _asm = Assembly.GetExecutingAssembly();
-            using (Stream s = _asm.GetManifestResourceStream("AdditionalMaps.Resources.Language.json"))
-            {
-                if (s != null)
-                {
-                    byte[] buffer = new byte[s.Length];
-                    s.Read(buffer, 0, buffer.Length);
-                    s.Dispose();
+            var asm = Assembly.GetExecutingAssembly();
+            using var s = asm.GetManifestResourceStream("AdditionalMaps.Resources.Language.json");
+            if (s == null) return;
+            var buffer = new byte[s.Length];
+            s.Read(buffer, 0, buffer.Length);
+            s.Dispose();
 
-                    string json = System.Text.Encoding.Default.GetString(buffer);
+            var json = System.Text.Encoding.Default.GetString(buffer);
 
-                    jsonDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(json);
-                    Modding.Logger.Log("[AdditionalMaps.Consts.LanguageStrings] - Loaded Language");
-                }
-            }
+            _jsonDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(json);
+            Modding.Logger.Log("[AdditionalMaps.Consts.LanguageStrings] - Loaded Language");
         }
 
         public string Get(string key, string sheet)
         {
-            GlobalEnums.SupportedLanguages lang = GameManager.instance.gameSettings.gameLanguage;
+            var lang = GameManager.instance.gameSettings.gameLanguage;
             try
             {
-                return jsonDict[lang.ToString()][sheet][key].Replace("<br>", "\n");
+                return _jsonDict[lang.ToString()][sheet][key].Replace("<br>", "\n");
             }
             catch
             {
-                return jsonDict[GlobalEnums.SupportedLanguages.EN.ToString()][sheet][key].Replace("<br>", "\n");
+                return _jsonDict[GlobalEnums.SupportedLanguages.EN.ToString()][sheet][key].Replace("<br>", "\n");
             }
         }
 
@@ -58,16 +52,16 @@ namespace AdditionalMaps.Consts
         {
             try
             {
-                GlobalEnums.SupportedLanguages lang = GameManager.instance.gameSettings.gameLanguage;
+                var lang = GameManager.instance.gameSettings.gameLanguage;
                 try
                 {
-                    return jsonDict[lang.ToString()][sheet].ContainsKey(key);
+                    return _jsonDict[lang.ToString()][sheet].ContainsKey(key);
                 }
                 catch
                 {
                     try
                     {
-                        return jsonDict[GlobalEnums.SupportedLanguages.EN.ToString()][sheet].ContainsKey(key);
+                        return _jsonDict[GlobalEnums.SupportedLanguages.EN.ToString()][sheet].ContainsKey(key);
                     }
                     catch
                     {

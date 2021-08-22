@@ -1,7 +1,5 @@
-﻿
-using System.Reflection;
+﻿using System.Reflection;
 using UnityEngine;
-using System;
 
 namespace AdditionalMaps
 {
@@ -9,27 +7,26 @@ namespace AdditionalMaps
     {
         public static void CopyOnto<T>(this T comp, GameObject o) where T : Component
         {
-            Type type = typeof(T);
-            T newComp = o.AddComponent<T>();
-            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Default | BindingFlags.DeclaredOnly;
-            PropertyInfo[] pinfos = type.GetProperties(flags);
-            foreach (var pinfo in pinfos)
+            var type = typeof(T);
+            var newComp = o.AddComponent<T>();
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Default | BindingFlags.DeclaredOnly;
+            var pInfos = type.GetProperties(flags);
+            foreach (var pInfo in pInfos)
             {
-                if (pinfo.CanWrite)
+                if (!pInfo.CanWrite) continue;
+                try
                 {
-                    try
-                    {
-                        pinfo.SetValue(newComp, pinfo.GetValue(comp, null), null);
-                    }
-                    catch
-                    {
-                    }
+                    pInfo.SetValue(newComp, pInfo.GetValue(comp, null), null);
+                }
+                catch
+                {
+                    // ignored
                 }
             }
-            FieldInfo[] finfos = type.GetFields(flags);
-            foreach (var finfo in finfos)
+            var fInfos = type.GetFields(flags);
+            foreach (var fInfo in fInfos)
             {
-                finfo.SetValue(newComp, finfo.GetValue(comp));
+                fInfo.SetValue(newComp, fInfo.GetValue(comp));
             }
         }
     }

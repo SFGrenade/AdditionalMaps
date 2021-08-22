@@ -1,6 +1,4 @@
-﻿using Modding;
-
-namespace AdditionalMaps
+﻿namespace AdditionalMaps
 {
     public class AmSaveSettings
     {
