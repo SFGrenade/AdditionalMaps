@@ -155,7 +155,7 @@ namespace AdditionalMaps.MonoBehaviours
                 //fsmCMPAction.parameters = new FsmVar[] { new FsmVar() { NamedVar = quickMapFsmVars.FindFsmString("Map Zone") } };
                 //fsmCMPAction.storeResult = new FsmVar() { NamedVar = quickMapFsmVars.FindFsmBool("Check Area Return") };
 
-                var fsmAaAction = new ActionAction<ActionArg>
+                var fsmAaAction = new FunctionAction<ActionArg>
                 {
                     arg = new ActionArg()
                     {
