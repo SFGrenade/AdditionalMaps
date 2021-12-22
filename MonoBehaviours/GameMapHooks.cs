@@ -97,13 +97,11 @@ namespace AdditionalMaps.MonoBehaviours
                 foreach (var (areaKey, areaStruct) in callbackAreas)
                 {
                     Log("Name: " + areaKey);
-                    customAreas.Add(areaKey, areaStruct);
+                    customAreas[areaKey] = areaStruct;
                     Object.DontDestroyOnLoad(areaStruct.areaGameObject);
                     areaStruct.areaGameObject.transform.SetParent(gameMapGameObject.transform);
                 }
             }
-
-            callbacks.Clear();
 
             ReplaceFsmQuickMap(gameMapGameObject);
 
@@ -215,12 +213,13 @@ namespace AdditionalMaps.MonoBehaviours
 
         private static void Log(string message)
         {
-            Logger.Log($"[GameMapHooks] - {message}");
+            Logger.LogDebug($"[AdditionalMaps][MonoBehaviours][GameMapHooks] - {message}");
+            Debug.Log($"[AdditionalMaps][MonoBehaviours][GameMapHooks] - {message}");
         }
 
         private static void Log(object message)
         {
-            Logger.Log($"[GameMapHooks] - {message}");
+            Log($"{message}");
         }
 
         #region New Functions
