@@ -1,0 +1,162 @@
+{
+  "DE": {
+    "Map Zones": {
+      "GODHOME": "Gottheim",
+      "PathOfPainArea": "Pfad des Schmerzes",
+      "WorkshopArea": "Werkstatt",
+      "CreditsArea": "Karte von @molamolasses",
+      "PantheonArea": "Pantheons",
+      "PohArea": "Pantheon von Hallownest"
+    },
+    "UI": {
+      "MAP_NAME_WHITE_PALACE": "Der Weiße Palast",
+      "MAP_NAME_GODHOME": "Gottheim",
+      "SFGrenadeAdditionalMaps_WpMapName": "Karte des Weißeb Palastes",
+      "SFGrenadeAdditionalMaps_GhMapName": "Karte von Gottheim"
+    }
+  },
+  "EN": {
+    "Map Zones": {
+      "GODHOME": "Godhome",
+      "PathOfPainArea": "Path of Pain",
+      "WorkshopArea": "Workshop",
+      "CreditsArea": "Map by @molamolasses",
+      "PantheonArea": "Pantheons",
+      "PohArea": "Pantheon of Hallownest"
+    },
+    "UI": {
+      "MAP_NAME_WHITE_PALACE": "White Palace",
+      "MAP_NAME_GODHOME": "Godhome",
+      "SFGrenadeAdditionalMaps_WpMapName": "Map of the White Palace",
+      "SFGrenadeAdditionalMaps_GhMapName": "Map of Godhome"
+    }
+  },
+  "ES": {
+    "Map Zones": {
+      "GODHOME": "Hogar de Dioses",
+      "PathOfPainArea": "Camino del dolor",
+      "WorkshopArea": "Taller",
+      "CreditsArea": "Mapa de @molamolasses",
+      "PantheonArea": "Panteones",
+      "PohArea": "Panteón de Hallownest"
+    },
+    "UI": {
+      "MAP_NAME_WHITE_PALACE": "Palacio Blanco",
+      "MAP_NAME_GODHOME": "Hogar de Dioses",
+      "SFGrenadeAdditionalMaps_WpMapName": "Mapa del Palacio Blanco",
+      "SFGrenadeAdditionalMaps_GhMapName": "Mapa de Hogar de Dioses"
+    }
+  },
+  "FR": {
+    "Map Zones": {
+      "GODHOME": "Maison des Dieux",
+      "PathOfPainArea": "Sentier des Souffrances",
+      "WorkshopArea": "Atelier",
+      "CreditsArea": "Carte par @molamolasses",
+      "PantheonArea": "Panthéons",
+      "PohArea": "Panthéon d'Hallownest"
+    },
+    "UI": {
+      "MAP_NAME_WHITE_PALACE": "Palais Blanc",
+      "MAP_NAME_GODHOME": "Maison des Dieux",
+      "SFGrenadeAdditionalMaps_WpMapName": "Carte du Palais Blanc",
+      "SFGrenadeAdditionalMaps_GhMapName": "Carte de la Maison des Dieux"
+    }
+  },
+  "IT": {
+    "Map Zones": {
+      "GODHOME": "Casa degli dei",
+      "PathOfPainArea": "Sentiero del dolore",
+      "WorkshopArea": "Workshop",
+      "CreditsArea": "Mappa di @molamolasses",
+      "PantheonArea": "Pantheons",
+      "PohArea": "Pantheon di Nidosacro"
+    },
+    "UI": {
+      "MAP_NAME_WHITE_PALACE": "Palazzo Bianco",
+      "MAP_NAME_GODHOME": "Casa degli dei",
+      "SFGrenadeAdditionalMaps_WpMapName": "Mappa del Palazzo Bianco",
+      "SFGrenadeAdditionalMaps_GhMapName": "Mappa della Casa degli dei"
+    }
+  },
+  "JA": {
+    "Map Zones": {
+      "GODHOME": "神々の家",
+      "PathOfPainArea": "痛みの道",
+      "WorkshopArea": "ワークショップ",
+      "CreditsArea": "@molamolassesによる地図",
+      "PantheonArea": "パンテオン",
+      "PohArea": "Hallownestのパンテオン"
+    },
+    "UI": {
+      "MAP_NAME_WHITE_PALACE": "ホワイトパレス",
+      "MAP_NAME_GODHOME": "神々の家",
+      "SFGrenadeAdditionalMaps_WpMapName": "白い宮殿の地図",
+      "SFGrenadeAdditionalMaps_GhMapName": "神々の家の地図 "
+    }
+  },
+  "KO": {
+    "Map Zones": {
+      "GODHOME": "신들의 집",
+      "PathOfPainArea": "고통의 길",
+      "WorkshopArea": "작업장",
+      "CreditsArea": "@molamolasses의지도",
+      "PantheonArea": "판테온",
+      "PohArea": "Hallownest의 판테온"
+    },
+    "UI": {
+      "MAP_NAME_WHITE_PALACE": "화이트 팰리스",
+      "MAP_NAME_GODHOME": "신들의 집",
+      "SFGrenadeAdditionalMaps_WpMapName": "화이트 팰리스의지도",
+      "SFGrenadeAdditionalMaps_GhMapName": "신들의 집지도 "
+    }
+  },
+  "PT": {
+    "Map Zones": {
+      "GODHOME": "Casa dos deuses",
+      "PathOfPainArea": "Caminho da Dor",
+      "WorkshopArea": "Oficina",
+      "CreditsArea": "Mapa por @molamolasses",
+      "PantheonArea": "Panteões",
+      "PohArea": "Panteão do Hallownest"
+    },
+    "UI": {
+      "MAP_NAME_WHITE_PALACE": "Palácio branco",
+      "MAP_NAME_GODHOME": "Casa dos deuses",
+      "SFGrenadeAdditionalMaps_WpMapName": "Mapa do Palácio Branco",
+      "SFGrenadeAdditionalMaps_GhMapName": "Mapa da Casa dos Deuses"
+    }
+  },
+  "RU": {
+    "Map Zones": {
+      "GODHOME": "Дом богов",
+      "PathOfPainArea": "Путь боли",
+      "WorkshopArea": "цех",
+      "CreditsArea": "Карта от @molamolasses",
+      "PantheonArea": "Пантеоны",
+      "PohArea": "Пантеон Hallownest"
+    },
+    "UI": {
+      "MAP_NAME_WHITE_PALACE": "Белый дворец",
+      "MAP_NAME_GODHOME": "Дом богов",
+      "SFGrenadeAdditionalMaps_WpMapName": "Карта Белого дворца",
+      "SFGrenadeAdditionalMaps_GhMapName": "Карта Дома богов "
+    }
+  },
+  "ZH": {
+    "Map Zones": {
+      "GODHOME": "众议院",
+      "PathOfPainArea": "痛苦之路",
+      "WorkshopArea": "作坊",
+      "CreditsArea": "@molamolasses的地图",
+      "PantheonArea": "万神殿",
+      "PohArea": "万圣殿"
+    },
+    "UI": {
+      "MAP_NAME_WHITE_PALACE": "白色宫殿",
+      "MAP_NAME_GODHOME": "众议院",
+      "SFGrenadeAdditionalMaps_WpMapName": "白宫地图",
+      "SFGrenadeAdditionalMaps_GhMapName": "众议院地图"
+    }
+  }
+}
