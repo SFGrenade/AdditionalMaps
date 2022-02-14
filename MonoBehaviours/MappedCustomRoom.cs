@@ -1,31 +1,30 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 
-namespace AdditionalMaps.MonoBehaviours
+namespace AdditionalMaps.MonoBehaviours;
+
+internal class MappedCustomRoom : Component
 {
-    internal class MappedCustomRoom : Component
+    private bool _fullSpriteDisplayed;
+    private GameManager _gm;
+
+    [UsedImplicitly]
+    private void Start()
     {
-        public bool fullSpriteDisplayed;
-        private GameManager _gm;
-        public PlayerData pd;
+        _gm = GameManager.instance;
+    }
 
-        private void Start()
+    [UsedImplicitly]
+    private void OnEnable()
+    {
+        if (_gm == null) _gm = GameManager.instance;
+        if (_fullSpriteDisplayed || (!_gm.playerData.scenesMapped.Contains(transform.name) && !_gm.playerData.mapAllRooms)) return;
+        for (var i = 0; i < transform.childCount; i++)
         {
-            _gm = GameManager.instance;
-            pd = PlayerData.instance;
+            var t = transform.GetChild(i);
+            t.gameObject.SetActive(true);
         }
 
-        private void OnEnable()
-        {
-            if (_gm == null) _gm = GameManager.instance;
-            if (fullSpriteDisplayed ||
-                (!_gm.playerData.scenesMapped.Contains(transform.name) && !_gm.playerData.mapAllRooms)) return;
-            for (var i = 0; i < transform.childCount; i++)
-            {
-                var t = transform.GetChild(i);
-                t.gameObject.SetActive(true);
-            }
-
-            fullSpriteDisplayed = true;
-        }
+        _fullSpriteDisplayed = true;
     }
 }

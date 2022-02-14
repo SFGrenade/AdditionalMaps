@@ -7,11 +7,10 @@
     <Product>AdditionalMaps</Product>
     <Description>A Hollow Knight Mod</Description>
     <Copyright>Copyright © SFGrenade 2019-2021</Copyright>
-    <AssemblyVersion>1.5.1.0</AssemblyVersion>
-    <FileVersion>1.5.1.0</FileVersion>
+    <AssemblyVersion>1.5.2.0</AssemblyVersion>
+    <FileVersion>1.5.2.0</FileVersion>
     <OutputPath>bin/$(Configuration)/</OutputPath>
     <LangVersion>latest</LangVersion>
-    <NoWarn>8002</NoWarn>
     <HollowKnightRefs Condition="$([MSBuild]::IsOSPlatform('Linux'))">/home/sfg/.steam/steam/steamapps/common/Hollow Knight/hollow_knight_Data/Managed/</HollowKnightRefs>
     <HollowKnightRefs Condition="$([MSBuild]::IsOSPlatform('Windows'))">E:/GOG/Hollow Knight 1.5 Modded/Hollow Knight_Data/Managed/</HollowKnightRefs>
     <ExportDir Condition="$([MSBuild]::IsOSPlatform('Linux'))">/home/sfg/Projects/_Export/</ExportDir>
@@ -375,7 +374,6 @@
     <EmbeddedResource Include="Resources\Godhome\RGH1.png" />
     <None Include=".gitignore" />
     <None Include="ReadMe.md" />
-    <None Include="Resources\.gitignore" />
     <None Include="sgKey.snk" />
   </ItemGroup>
   <ItemGroup>

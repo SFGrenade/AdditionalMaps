@@ -1,12 +1,11 @@
-﻿namespace AdditionalMaps
-{
-    public class AmSaveSettings
-    {
-        public bool AdditionalMapsGotWpMap = false;
-        public bool AdditionalMapsGotGhMap = false;
-    }
+﻿namespace AdditionalMaps;
 
-    public class AmGlobalSettings
-    {
-    }
+public class AmSaveSettings
+{
+    public bool AdditionalMapsGotWpMap = false;
+    public bool AdditionalMapsGotGhMap = false;
+}
+
+public class AmGlobalSettings
+{
 }
