@@ -129,18 +129,18 @@
   },
   "RU": {
     "Map Zones": {
-      "GODHOME": "Дом богов",
+      "GODHOME": "Божий кров",
       "PathOfPainArea": "Путь боли",
-      "WorkshopArea": "цех",
+      "WorkshopArea": "Мастерская",
       "CreditsArea": "Карта от @molamolasses",
       "PantheonArea": "Пантеоны",
-      "PohArea": "Пантеон Hallownest"
+      "PohArea": "Пантеон Халлоунеста"
     },
     "UI": {
       "MAP_NAME_WHITE_PALACE": "Белый дворец",
-      "MAP_NAME_GODHOME": "Дом богов",
+      "MAP_NAME_GODHOME": "Божий кров",
       "SFGrenadeAdditionalMaps_WpMapName": "Карта Белого дворца",
-      "SFGrenadeAdditionalMaps_GhMapName": "Карта Дома богов "
+      "SFGrenadeAdditionalMaps_GhMapName": "Карта Божьего крова"
     }
   },
   "ZH": {
