@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using GlobalEnums;
 using HutongGames.PlayMaker.Actions;
 using Modding;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using SFCore.Utils;
 using UnityEngine;
+using UnityEngine.UIElements;
 using MLogger = Modding.Logger;
 using ULogger = UnityEngine.Debug;
 using Object = UnityEngine.Object;
@@ -38,37 +42,222 @@ public static class GameMapHooks
         {
             On.GameManager.SetGameMap -= OnGameManagerSetGameMap;
         }
-        catch (Exception)
+        catch
         {
-            // ignored
         }
-
-        On.GameManager.SetGameMap += OnGameManagerSetGameMap;
-
-        MakeHooks();
+        finally
+        {
+            On.GameManager.SetGameMap += OnGameManagerSetGameMap;
+        }
 
         if (callback != null) Callbacks.Add(callback);
     }
 
     private static void MakeHooks()
     {
-        On.GameMap.WorldMap += NewWorldMap;
-        On.GameMap.QuickMapAncientBasin += NewQuickMapAncientBasin;
-        On.GameMap.QuickMapCity += NewQuickMapCity;
-        On.GameMap.QuickMapCliffs += NewQuickMapCliffs;
-        On.GameMap.QuickMapCrossroads += NewQuickMapCrossroads;
-        On.GameMap.QuickMapCrystalPeak += NewQuickMapCrystalPeak;
-        On.GameMap.QuickMapDeepnest += NewQuickMapDeepnest;
-        On.GameMap.QuickMapFogCanyon += NewQuickMapFogCanyon;
-        On.GameMap.QuickMapFungalWastes += NewQuickMapFungalWastes;
-        On.GameMap.QuickMapGreenpath += NewQuickMapGreenpath;
-        On.GameMap.QuickMapKingdomsEdge += NewQuickMapKingdomsEdge;
-        On.GameMap.QuickMapQueensGardens += NewQuickMapQueensGardens;
-        On.GameMap.QuickMapRestingGrounds += NewQuickMapRestingGrounds;
-        On.GameMap.QuickMapDirtmouth += NewQuickMapDirtmouth;
-        On.GameMap.QuickMapWaterways += NewQuickMapWaterways;
-        On.GameMap.CloseQuickMap += NewCloseQuickMap;
-        On.GameMap.PositionCompass += NewPositionCompass;
+        try
+        {
+            On.GameMap.QuickMapAncientBasin -= NewQuickMapAncientBasin;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapAncientBasin += NewQuickMapAncientBasin;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapCity -= NewQuickMapCity;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapCity += NewQuickMapCity;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapCliffs -= NewQuickMapCliffs;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapCliffs += NewQuickMapCliffs;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapCrossroads -= NewQuickMapCrossroads;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapCrossroads += NewQuickMapCrossroads;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapCrystalPeak -= NewQuickMapCrystalPeak;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapCrystalPeak += NewQuickMapCrystalPeak;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapDeepnest -= NewQuickMapDeepnest;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapDeepnest += NewQuickMapDeepnest;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapFogCanyon -= NewQuickMapFogCanyon;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapFogCanyon += NewQuickMapFogCanyon;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapFungalWastes -= NewQuickMapFungalWastes;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapFungalWastes += NewQuickMapFungalWastes;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapGreenpath -= NewQuickMapGreenpath;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapGreenpath += NewQuickMapGreenpath;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapKingdomsEdge -= NewQuickMapKingdomsEdge;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapKingdomsEdge += NewQuickMapKingdomsEdge;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapQueensGardens -= NewQuickMapQueensGardens;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapQueensGardens += NewQuickMapQueensGardens;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapRestingGrounds -= NewQuickMapRestingGrounds;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapRestingGrounds += NewQuickMapRestingGrounds;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapDirtmouth -= NewQuickMapDirtmouth;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapDirtmouth += NewQuickMapDirtmouth;
+        }
+
+        try
+        {
+            On.GameMap.QuickMapWaterways -= NewQuickMapWaterways;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.QuickMapWaterways += NewQuickMapWaterways;
+        }
+
+        try
+        {
+            On.GameMap.CloseQuickMap -= NewCloseQuickMap;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.CloseQuickMap += NewCloseQuickMap;
+        }
+
+        try
+        {
+            On.GameMap.PositionCompass -= NewPositionCompass;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            On.GameMap.PositionCompass += NewPositionCompass;
+        }
+
+        try
+        {
+            IL.GameMap.WorldMap -= IlWorldMap;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            IL.GameMap.WorldMap += IlWorldMap;
+        }
     }
 
     private static void OnGameManagerSetGameMap(On.GameManager.orig_SetGameMap orig, GameManager self,
@@ -104,6 +293,8 @@ public static class GameMapHooks
         }
 
         ReplaceFsmQuickMap(gameMapGameObject);
+
+        MakeHooks();
 
         Log("~ReplaceComponent");
     }
@@ -161,7 +352,7 @@ public static class GameMapHooks
                 },
                 action = QuickMapNew
             };
-                
+
             //quickMapFsm.InsertAction(pair.Key, fsmAaAction, prefabState == "Cliffs" ? 5 : 6);
             quickMapFsm.InsertAction(pair.Key, fsmAaAction, 5);
             //quickMapFsm.RemoveAction(pair.Key, prefabState == "Cliffs" ? 4 : 5);
@@ -174,6 +365,7 @@ public static class GameMapHooks
             {
                 quickMapFsm.AddTransition("Check Area", mapZoneName, pair.Key);
             }
+
             quickMapFsm.AddTransition(pair.Key, "CLOSE QUICK MAP", "Check State");
             quickMapFsm.ChangeTransition(pair.Key, "CLOSE QUICK MAP", "Check State");
         }
@@ -214,7 +406,7 @@ public static class GameMapHooks
     private static void Log(string message)
     {
         var outMsg = $"[AdditionalMaps][MonoBehaviours][GameMapHooks] - {message}";
-        MLogger.LogDebug(outMsg);
+        MLogger.Log(outMsg);
         ULogger.Log(outMsg);
     }
 
@@ -231,9 +423,82 @@ public static class GameMapHooks
 
         var pd = PlayerData.instance;
         var currentMapZone = GameManager.instance.GetCurrentMapZone();
-        foreach (var pair in from pair in CustomAreas where pd.GetBool(pair.Value.PlayerDataBoolGotAreaMap) || pair.Value.MapZoneStrings.Contains(currentMapZone) &&
-                     pd.GetBool("equippedCharm_2") where pd.GetBool(pair.Value.PlayerDataBoolGotAreaMap) where pair.Value.AreaGameObject != null select pair)
+        foreach (var pair in from pair in CustomAreas
+                 where pd.GetBool(pair.Value.PlayerDataBoolGotAreaMap) ||
+                       pair.Value.MapZoneStrings.Contains(currentMapZone) &&
+                       pd.GetBool("equippedCharm_2")
+                 where pd.GetBool(pair.Value.PlayerDataBoolGotAreaMap)
+                 where pair.Value.AreaGameObject != null
+                 select pair)
             pair.Value.AreaGameObject.SetActive(true);
+    }
+
+    private static void IlWorldMap(ILContext il)
+    {
+        ILCursor cursor = new ILCursor(il);
+        cursor.Goto(0);
+        cursor.GotoNext(MoveType.Before, x => x.MatchLdarg(0), x => x.MatchLdfld<GameMap>("flamePins"));
+
+        ILLabel previousEntireOutsideIfLabel = null;
+        foreach ((string key, SCustomArea data) in CustomAreas)
+        {
+            Log($"Adding area '{key}' to method!");
+            ILLabel entireOutsideIfLabel = il.DefineLabel();
+
+            ILLabel entireInsideIfLabel = il.DefineLabel();
+            // if (this.pd.GetBool(data.PlayerDataBoolGotAreaMap) || ...
+            cursor.Emit(OpCodes.Ldarg_0);
+            if (previousEntireOutsideIfLabel != null)
+            {
+                previousEntireOutsideIfLabel.Target = cursor.Prev;
+            }
+            cursor.Emit(OpCodes.Ldfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "pd"));
+            cursor.Emit(OpCodes.Ldstr, data.PlayerDataBoolGotAreaMap);
+            cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(PlayerData), "GetBool"));
+            cursor.Emit(OpCodes.Brtrue_S, entireInsideIfLabel);
+
+            ILLabel entireOtherInsideIfLabel = il.DefineLabel();
+            for (int i = 0; i < data.MapZoneStrings.Count - 1; i++)
+            {
+                // ... (||) currentMapZone == areaKey (||) ...
+                cursor.Emit(OpCodes.Ldloc_0);
+                cursor.Emit(OpCodes.Ldstr, data.MapZoneStrings[i]);
+                cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(string), "op_Equality", false));
+                cursor.Emit(OpCodes.Brtrue_S, entireOtherInsideIfLabel);
+            }
+            if (data.MapZoneStrings.Count > 0)
+            {
+                // ... (||) currentMapZone == areaKey ...
+                cursor.Emit(OpCodes.Ldloc_0);
+                cursor.Emit(OpCodes.Ldstr, data.MapZoneStrings[data.MapZoneStrings.Count - 1]);
+                cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(string), "op_Equality", false));
+                cursor.Emit(OpCodes.Brfalse_S, entireOutsideIfLabel);
+            }
+            // ... ) && this.pd.GetBool("equippedCharm_2")))
+            cursor.Emit(OpCodes.Ldarg_0);
+            entireOtherInsideIfLabel.Target = cursor.Prev;
+            cursor.Emit(OpCodes.Ldfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "pd"));
+            cursor.Emit(OpCodes.Ldstr, nameof(PlayerData.equippedCharm_2));
+            cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(PlayerData), "GetBool"));
+            cursor.Emit(OpCodes.Brfalse_S, entireOutsideIfLabel);
+
+            /*
+             * data.AreaGameObject.SetActive(this.pd.GetBool(data.PlayerDataBoolGotAreaMap));
+             */
+            cursor.EmitReference(data.AreaGameObject);
+            entireInsideIfLabel.Target = cursor.Prev;
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.Emit(OpCodes.Ldfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "pd"));
+            cursor.Emit(OpCodes.Ldstr, data.PlayerDataBoolGotAreaMap);
+            cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(PlayerData), "GetBool"));
+            cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(GameObject), "SetActive"));
+
+            previousEntireOutsideIfLabel = entireOutsideIfLabel;
+        }
+        if (previousEntireOutsideIfLabel != null)
+        {
+            previousEntireOutsideIfLabel.Target = cursor.Prev.Next;
+        }
     }
 
     public static void NewQuickMapAncientBasin(On.GameMap.orig_QuickMapAncientBasin orig, GameMap self)
@@ -415,7 +680,8 @@ public static class GameMapHooks
                 break;
         }
 
-        foreach (var pair in CustomAreas.Where(pair => pair.Value.MapZoneStrings.Contains(currentMapZone)).Where(pair => pair.Value.AreaGameObject != null))
+        foreach (var pair in CustomAreas.Where(pair => pair.Value.MapZoneStrings.Contains(currentMapZone))
+                     .Where(pair => pair.Value.AreaGameObject != null))
         {
             gameObject = pair.Value.AreaGameObject;
             self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
@@ -451,7 +717,8 @@ public static class GameMapHooks
                 {
                     if (!self.inRoom)
                     {
-                        self.shadeMarker.transform.localPosition = new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f);
+                        self.shadeMarker.transform.localPosition =
+                            new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f);
                     }
                     else
                     {
@@ -468,21 +735,26 @@ public static class GameMapHooks
                         self.shadeMarker.transform.localPosition = new Vector3(x, y, 0f);
                     }
 
-                    ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").SetVector3("shadeMapPos", new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f));
+                    ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").SetVector3("shadeMapPos",
+                        new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f));
                     break;
                 }
             }
 
             if (!ReflectionHelper.GetField<GameMap, bool>(self, "posGate")) return;
-            self.dreamGateMarker.transform.localPosition = new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f);
-            ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").SetVector3("dreamgateMapPos", new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f));
+            self.dreamGateMarker.transform.localPosition =
+                new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f);
+            ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").SetVector3("dreamgateMapPos",
+                new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f));
         }
         else
         {
             Log("Couldn't find current scene object!");
             if (!posShade) return;
-            ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").SetVector3("shadeMapPos", new Vector3(-10000f, -10000f, 0f));
-            self.shadeMarker.transform.localPosition = ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").GetVector3("shadeMapPos");
+            ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd")
+                .SetVector3("shadeMapPos", new Vector3(-10000f, -10000f, 0f));
+            self.shadeMarker.transform.localPosition =
+                ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").GetVector3("shadeMapPos");
         }
     }
 

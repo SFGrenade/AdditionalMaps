@@ -10,6 +10,7 @@ using AdditionalMaps.Consts;
 using AdditionalMaps.MonoBehaviours;
 using GlobalEnums;
 using JetBrains.Annotations;
+using MonoMod.Cil;
 using SFCore.Generics;
 using SFCore.Utils;
 using UnityEngine.SceneManagement;
@@ -32,6 +33,9 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
     private GameObject _shinyPrefab;
     private PlayMakerFSM _setCompassPointPrefab;
     private PlayMakerFSM _setCompassPointRoomPrefab;
+
+    private static GameObject areaWhitePalace = null;
+    private static GameObject areaGodhome = null;
 
     public override string GetVersion() => Util.GetVersion(Assembly.GetExecutingAssembly());
 
@@ -56,6 +60,8 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         SpriteDict = new TextureStrings();
 
         On.PlayMakerFSM.Start += OnPlayMakerFSMStart;
+
+        GameMapHooks.Init(GameMapCallback);
     }
 
     public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -69,7 +75,8 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             UObject.Destroy(_shinyPrefab.transform.GetChild(0).gameObject.GetComponent<PersistentBoolItem>());
         }
         SetInactive(_shinyPrefab);
-        _setCompassPointPrefab = preloadedObjects["Town"]["_Props/Stag_station/open/door_station"].LocateMyFSM("Set Compass Point");
+        _setCompassPointPrefab = preloadedObjects["Town"]["_Props/Stag_station/open/door_station"]
+            .LocateMyFSM("Set Compass Point");
         _setCompassPointRoomPrefab = preloadedObjects["Room_mapper"]["_SceneManager"].LocateMyFSM("map_isroom");
 
         InitCallbacks();
@@ -84,8 +91,6 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         DefaultSpriteMaterial.SetInt(Shader.PropertyToID("_StencilWriteMask"), 255);
         DefaultSpriteMaterial.SetInt(Shader.PropertyToID("_StencilReadMask"), 255);
 
-        GameMapHooks.Init(GameMapCallback);
-
         Log("Initialized");
     }
 
@@ -99,7 +104,8 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         areaNamePrefab.SetActive(false);
         var subAreaPrefab = UObject.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(6).GetChild(0).gameObject);
         subAreaPrefab.SetActive(false);
-        var roomMat = UObject.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(1).GetComponent<SpriteRenderer>().material);
+        var roomMat =
+            UObject.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(1).GetComponent<SpriteRenderer>().material);
         DefaultSpriteMaterial = roomMat;
         var benchPrefab = UObject.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(3).GetChild(2).gameObject);
         benchPrefab.SetActive(false);
@@ -110,8 +116,8 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         #region White Palace Map
 
-        var areaWhitePalace = UObject.Instantiate(gameMapBetter.areaCliffs, gameMapBetter.transform);
-        areaWhitePalace.SetActive(true);
+        areaWhitePalace = UObject.Instantiate(gameMapBetter.areaCliffs, gameMapBetter.transform);
+        areaWhitePalace.SetActive(false);
 
         for (var i = 0; i < areaWhitePalace.transform.childCount; i++)
         {
@@ -121,7 +127,8 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         areaWhitePalace.name = "WHITE_PALACE";
         areaWhitePalace.layer = 5;
         areaWhitePalace.transform.localScale = Vector3.one;
-        areaWhitePalace.transform.localPosition = new Vector3(-2.0f, 15f, gameMapBetter.areaCliffs.transform.localPosition.z);
+        areaWhitePalace.transform.localPosition =
+            new Vector3(-2.0f, 15f, gameMapBetter.areaCliffs.transform.localPosition.z);
 
         var wpScenes = new List<GameObject>
         {
@@ -158,6 +165,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             var rmr = sceneGo.GetComponent<RoughMapRoom>();
             rmr.fullSprite = sr.sprite;
         }
+
         var tmpChildZ = gameMapBetter.areaCliffs.transform.GetChild(6).localPosition.z;
         const float sceneDivider = 500.0f + (100.0f / 3.0f);
         wpScenes[0].transform.localPosition = new Vector3(-375 / sceneDivider, -2510 / sceneDivider, tmpChildZ);
@@ -250,6 +258,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             sr.sortingLayerID = 629535577;
             sr.sortingOrder = 0;
         }
+
         wpRoomSprites[17].transform.localScale = new Vector3(1.0f / 0.93f, 1.0f / 1.04f, 1.0f);
 
         var pathOfPainArea = UObject.Instantiate(subAreaPrefab, wpScenes[15].transform);
@@ -286,7 +295,8 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         #region Area Name
 
         var wpAreaNameArea = UObject.Instantiate(areaNamePrefab, areaWhitePalace.transform);
-        wpAreaNameArea.transform.localPosition = new Vector3(6.433125f, 1.6825f, wpAreaNameArea.transform.localPosition.z);
+        wpAreaNameArea.transform.localPosition =
+            new Vector3(6.433125f, 1.6825f, wpAreaNameArea.transform.localPosition.z);
         wpAreaNameArea.GetComponent<SetTextMeshProGameText>().convName = "WHITE_PALACE";
         wpAreaNameArea.SetActive(true);
 
@@ -310,7 +320,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         #region Godhome Map
 
-        var areaGodhome = UObject.Instantiate(gameMapBetter.areaCliffs, gameMapBetter.transform);
+        areaGodhome = UObject.Instantiate(gameMapBetter.areaCliffs, gameMapBetter.transform);
         areaGodhome.SetActive(true);
 
         for (var i = 0; i < areaGodhome.transform.childCount; i++)
@@ -321,7 +331,8 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         areaGodhome.name = "GODS_GLORY";
         areaGodhome.layer = 5;
         areaGodhome.transform.localScale = Vector3.one;
-        areaGodhome.transform.localPosition = new Vector3(5.5f, 14.5f, gameMapBetter.areaCliffs.transform.localPosition.z);
+        areaGodhome.transform.localPosition =
+            new Vector3(5.5f, 14.5f, gameMapBetter.areaCliffs.transform.localPosition.z);
 
         var ghScenes = new List<GameObject>
         {
@@ -342,6 +353,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             var rmr = sceneGo.GetComponent<RoughMapRoom>();
             rmr.fullSprite = sr.sprite;
         }
+
         ghScenes[0].transform.localPosition = new Vector3(0.3687f, -2.678f, tmpChildZ);
         ghScenes[1].transform.localPosition = new Vector3(-0.708f, 0.65f, tmpChildZ);
 
@@ -419,6 +431,17 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         ModHooks.GetPlayerBoolHook += OnGetPlayerBoolHook;
         ModHooks.SetPlayerBoolHook += OnSetPlayerBoolHook;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += OnSceneManagerActiveSceneChanged;
+        IL.SceneManager.AddSceneMapped += OnSceneManagerAddSceneMapped;
+    }
+
+    private void OnSceneManagerAddSceneMapped(ILContext il)
+    {
+        // this removes the check for white palace or godhome
+        ILCursor cursor = new ILCursor(il);
+        cursor.Goto(0);
+        cursor.GotoNext(MoveType.Before, x => x.MatchLdarg(0), x => x.MatchLdfld<SceneManager>("mapZone"));
+        //cursor.RemoveRange(0x3E - 0x2A);
+        cursor.RemoveRange(8);
     }
 
     private readonly List<string> _sceneList = new()
@@ -429,8 +452,16 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         "GG_Workshop",
         "GG_Blue_Room"
     };
+
     private void OnSceneManagerActiveSceneChanged(Scene from, Scene to)
     {
+        //bool self1 = areaWhitePalace.activeSelf;
+        //bool self2 = areaGodhome.activeSelf;
+        //areaWhitePalace.SetActive(false);
+        //areaGodhome.SetActive(false);
+        //areaWhitePalace.SetActive(self1);
+        //areaGodhome.SetActive(self2);
+
         if (!_sceneList.Contains(to.name)) return;
 
         switch (to.name)
@@ -438,10 +469,13 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             case "White_Palace_03_hub":
             {
                 MakeSpriteGo("sm1", GetSprite(TextureStrings.Sm1Key), new Vector3(55.2f, 45.1f, 0.1f), Vector3.zero);
-                MakeSpriteGo("sm2", GetSprite(TextureStrings.Sm2Key), new Vector3(56.3f, 45.1f, 0.1f), new Vector3(0, 0, -1.374f));
-                MakeSpriteGo("sm2", GetSprite(TextureStrings.Sm2Key), new Vector3(57.5f, 45.1f, 0.17f), new Vector3(0, 0, 14.291f));
+                MakeSpriteGo("sm2", GetSprite(TextureStrings.Sm2Key), new Vector3(56.3f, 45.1f, 0.1f),
+                    new Vector3(0, 0, -1.374f));
+                MakeSpriteGo("sm2", GetSprite(TextureStrings.Sm2Key), new Vector3(57.5f, 45.1f, 0.17f),
+                    new Vector3(0, 0, 14.291f));
                 MakeSpriteGo("sm3", GetSprite(TextureStrings.Sm3Key), new Vector3(58.6f, 45.2f, 0.1f), Vector3.zero);
-                MakeSpriteGo("sm3", GetSprite(TextureStrings.Sm3Key), new Vector3(59.7f, 45.2f, 0.1f), new Vector3(0, 0, -5.748f));
+                MakeSpriteGo("sm3", GetSprite(TextureStrings.Sm3Key), new Vector3(59.7f, 45.2f, 0.1f),
+                    new Vector3(0, 0, -5.748f));
 
                 #region Shiny FSM
 
@@ -477,7 +511,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
                 tmpCompareTo.Add(tmpCompareTo.Count + 1);
                 isAction.compareTo = tmpCompareTo.ToArray();
                 shinyFsmVars.FindFsmInt("Trinket Num").Value = tmpCompareTo.Count;
-                var tmpSendEvent = new List<FsmEvent>(isAction.sendEvent) {FsmEvent.FindEvent("PURE SEED")};
+                var tmpSendEvent = new List<FsmEvent>(isAction.sendEvent) { FsmEvent.FindEvent("PURE SEED") };
                 isAction.sendEvent = tmpSendEvent.ToArray();
 
                 shinyFsm.CopyState("Love Key", "Necklace");
@@ -510,12 +544,15 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
                 _setCompassPointPrefab.CopyOnto(workshopDoor);
                 var fsm2 = workshopDoor.LocateMyFSM("Set Compass Point");
                 fsm2.Preprocess();
-                
+
                 MakeSpriteGo("sm1", GetSprite(TextureStrings.Sm1Key), new Vector3(115.7f, 60.1f, 0.1f), Vector3.zero);
-                MakeSpriteGo("sm2", GetSprite(TextureStrings.Sm2Key), new Vector3(116.7f, 60.1f, 0.1f), new Vector3(0, 0, -1.374f));
-                MakeSpriteGo("sm2", GetSprite(TextureStrings.Sm2Key), new Vector3(118.0f, 60.1f, 0.17f), new Vector3(0, 0, 14.291f));
+                MakeSpriteGo("sm2", GetSprite(TextureStrings.Sm2Key), new Vector3(116.7f, 60.1f, 0.1f),
+                    new Vector3(0, 0, -1.374f));
+                MakeSpriteGo("sm2", GetSprite(TextureStrings.Sm2Key), new Vector3(118.0f, 60.1f, 0.17f),
+                    new Vector3(0, 0, 14.291f));
                 MakeSpriteGo("sm3", GetSprite(TextureStrings.Sm3Key), new Vector3(119.1f, 60.2f, 0.1f), Vector3.zero);
-                MakeSpriteGo("sm3", GetSprite(TextureStrings.Sm3Key), new Vector3(120.2f, 60.2f, 0.1f), new Vector3(0, 0, -5.748f));
+                MakeSpriteGo("sm3", GetSprite(TextureStrings.Sm3Key), new Vector3(120.2f, 60.2f, 0.1f),
+                    new Vector3(0, 0, -5.748f));
 
                 #region Shiny FSM
 
@@ -551,7 +588,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
                 tmpCompareTo.Add(tmpCompareTo.Count + 1);
                 isAction.compareTo = tmpCompareTo.ToArray();
                 shinyFsmVars.FindFsmInt("Trinket Num").Value = tmpCompareTo.Count;
-                var tmpSendEvent = new List<FsmEvent>(isAction.sendEvent) {FsmEvent.FindEvent("PURE SEED")};
+                var tmpSendEvent = new List<FsmEvent>(isAction.sendEvent) { FsmEvent.FindEvent("PURE SEED") };
                 isAction.sendEvent = tmpSendEvent.ToArray();
 
                 shinyFsm.CopyState("Love Key", "Necklace");
@@ -617,6 +654,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
     }
 
     #region Get/Set Hooks
+
     private string OnLanguageGetHook(string key, string sheet, string orig)
     {
         //Log($"Sheet: {sheet}; Key: {key}");
@@ -628,10 +666,12 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         var tmpField = ReflectionHelper.GetFieldInfo(typeof(AmSaveSettings), target);
         return tmpField != null && tmpField.FieldType == typeof(T);
     }
+
     private T GetSettingsValue<T>(string target)
     {
         return ReflectionHelper.GetField<AmSaveSettings, T>(SaveSettings, target);
     }
+
     private void SetSettingsValue<T>(string target, T val)
     {
         ReflectionHelper.SetField(SaveSettings, target, val);
@@ -641,6 +681,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
     {
         return HasGetSettingsValue<bool>(target) ? GetSettingsValue<bool>(target) : orig;
     }
+
     private bool OnSetPlayerBoolHook(string target, bool orig)
     {
         if (!HasGetSettingsValue<bool>(target)) return orig;
@@ -649,7 +690,8 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         GameManager.instance.UpdateGameMap();
         UObject.FindObjectOfType<GameMap>().SetupMap();
 
-        Resources.FindObjectsOfTypeAll<Transform>().First(t => t.gameObject.name.Equals("Map Update Msg")).gameObject.Spawn(Vector3.zero);
+        Resources.FindObjectsOfTypeAll<Transform>().First(t => t.gameObject.name.Equals("Map Update Msg")).gameObject
+            .Spawn(Vector3.zero);
         return orig;
     }
 
@@ -682,6 +724,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         #endregion
 
         #region Add sprite and text for custom area
+
         var customPart = UObject.Instantiate(wideMap.transform.GetChild(0).gameObject, wideMap.transform, true);
         customPart.SetActive(false);
         customPart.name = customAreaName;
@@ -690,9 +733,11 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         customPart.GetComponentInChildren<SetTextMeshProGameText>().convName = customAreaName.ToUpper();
         customPart.transform.Find("Area Name").localPosition += new Vector3(-1.0f, 0, 0);
         customPart.LocateMyFSM("deactivate").FsmVariables.GetFsmString("playerData bool").Value = boolName;
+
         #endregion
 
         #region Edit World Map - UI Control FSM
+
         var worldMapFsm = worldMap.LocateMyFSM("UI Control");
 
         if (worldMapFsm.GetState("Mines").Fsm == null)
@@ -703,6 +748,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         var wmUcFsmVars = worldMapFsm.FsmVariables;
 
         #region Create Custom States
+
         worldMapFsm.CopyState("Mines", caState);
 
         worldMapFsm.CopyState("T Left", caLeftState);
@@ -712,12 +758,17 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         worldMapFsm.CopyState("To Zoom 10", caZoomState);
 
         worldMapFsm.CopyState("CR Up", extraUpState);
+
         #endregion
 
         #region Add Custom FSM Variable
+
         worldMapFsm.AddGameObjectVariable(customAreaName);
+
         #endregion
+
         #region Add FindChild Action to store Custom Area Sprite
+
         var tmpActionFindChild = new FindChild
         {
             gameObject = worldMapFsm.GetAction<FindChild>("Init", 10).gameObject,
@@ -725,10 +776,13 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             storeResult = wmUcFsmVars.GetFsmGameObject(customAreaName)
         };
         worldMapFsm.InsertAction("Init", tmpActionFindChild, 11);
+
         #endregion
 
         #region Add Custom Global Transition
+
         var customGlobalEvent = worldMapFsm.AddGlobalTransition($"{customAreaName.ToUpper()}_GLOBAL", caState);
+
         #endregion
 
         DebugLog("... Added Custom Global Transition...");
@@ -739,12 +793,20 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         DebugLog("... Create Custom States...");
 
         #region Create Custom States
-        worldMapFsm.GetAction<SendEventByName>(caState, 2).eventTarget = new FsmEventTarget { target = FsmEventTarget.EventTarget.GameObject, gameObject = new FsmOwnerDefault { OwnerOption = OwnerDefaultOption.SpecifyGameObject, GameObject = customPart } };
+
+        worldMapFsm.GetAction<SendEventByName>(caState, 2).eventTarget = new FsmEventTarget
+        {
+            target = FsmEventTarget.EventTarget.GameObject,
+            gameObject = new FsmOwnerDefault
+                { OwnerOption = OwnerDefaultOption.SpecifyGameObject, GameObject = customPart }
+        };
         worldMapFsm.GetAction<GetLanguageString>(caState, 3).convName = $"MAP_NAME_{customAreaName.ToUpper()}";
         worldMapFsm.GetAction<SetStringValue>(caState, 5).stringValue = customAreaName.ToUpper();
         worldMapFsm.GetAction<SetVector3Value>(caState, 6).vector3Value = cameraZoomPosition;
 
-        worldMapFsm.InsertAction(extraUpState, new PlayerDataBoolTest { gameObject = tmpGameObject, boolName = boolName, isTrue = customGlobalEvent }, 0);
+        worldMapFsm.InsertAction(extraUpState,
+            new PlayerDataBoolTest { gameObject = tmpGameObject, boolName = boolName, isTrue = customGlobalEvent }, 0);
+
         #endregion
 
         worldMapFsm.ChangeTransition(caState, "UI LEFT", caLeftState);
@@ -761,11 +823,12 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         worldMapFsm.ChangeTransition(extraUpState, "FINISHED", "Town");
 
         #endregion
+
         wideMap.SetActive(tmpActive);
 
         DebugLog("~ChangeWpMap");
     }
-        
+
     private static void ChangeGhMap(GameObject worldMap, GameObject wideMap)
     {
         DebugLog($"!ChangeWpMap: \"{wideMap}\"");
@@ -791,6 +854,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         #endregion
 
         #region Add sprite and text for custom area
+
         var customPart = UObject.Instantiate(wideMap.transform.GetChild(0).gameObject, wideMap.transform, true);
         customPart.SetActive(false);
         customPart.name = customAreaName;
@@ -799,9 +863,11 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         customPart.GetComponentInChildren<SetTextMeshProGameText>().convName = customAreaName.ToUpper();
         customPart.transform.Find("Area Name").localPosition += new Vector3(-1.0f, 0, 0);
         customPart.LocateMyFSM("deactivate").FsmVariables.GetFsmString("playerData bool").Value = boolName;
+
         #endregion
 
         #region Edit World Map - UI Control FSM
+
         var worldMapFsm = worldMap.LocateMyFSM("UI Control");
 
         if (worldMapFsm.GetState("Mines").Fsm == null)
@@ -812,6 +878,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         var wmUcFsmVars = worldMapFsm.FsmVariables;
 
         #region Create Custom States
+
         worldMapFsm.CopyState("Mines", caState);
 
         worldMapFsm.CopyState("Mi Left", caLeftState);
@@ -821,12 +888,17 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         worldMapFsm.CopyState("To Zoom 11", caZoomState);
 
         worldMapFsm.CopyState("RG Up", extraUpState);
+
         #endregion
 
         #region Add Custom FSM Variable
+
         worldMapFsm.AddGameObjectVariable(customAreaName);
+
         #endregion
+
         #region Add FindChild Action to store Custom Area Sprite
+
         var tmpActionFindChild = new FindChild
         {
             gameObject = worldMapFsm.GetAction<FindChild>("Init", 10).gameObject,
@@ -834,10 +906,13 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             storeResult = wmUcFsmVars.GetFsmGameObject(customAreaName)
         };
         worldMapFsm.InsertAction("Init", tmpActionFindChild, 11);
+
         #endregion
 
         #region Add Custom Global Transition
+
         var customGlobalEvent = worldMapFsm.AddGlobalTransition($"{customAreaName.ToUpper()}_GLOBAL", caState);
+
         #endregion
 
         DebugLog("... Added Custom Global Transition...");
@@ -848,12 +923,20 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         DebugLog("... Create Custom States...");
 
         #region Create Custom States
-        worldMapFsm.GetAction<SendEventByName>(caState, 2).eventTarget = new FsmEventTarget { target = FsmEventTarget.EventTarget.GameObject, gameObject = new FsmOwnerDefault { OwnerOption = OwnerDefaultOption.SpecifyGameObject, GameObject = customPart } };
+
+        worldMapFsm.GetAction<SendEventByName>(caState, 2).eventTarget = new FsmEventTarget
+        {
+            target = FsmEventTarget.EventTarget.GameObject,
+            gameObject = new FsmOwnerDefault
+                { OwnerOption = OwnerDefaultOption.SpecifyGameObject, GameObject = customPart }
+        };
         worldMapFsm.GetAction<GetLanguageString>(caState, 3).convName = $"MAP_NAME_{customAreaName.ToUpper()}";
         worldMapFsm.GetAction<SetStringValue>(caState, 5).stringValue = customAreaName.ToUpper();
         worldMapFsm.GetAction<SetVector3Value>(caState, 6).vector3Value = cameraZoomPosition;
 
-        worldMapFsm.InsertAction(extraUpState, new PlayerDataBoolTest { gameObject = tmpGameObject, boolName = boolName, isTrue = customGlobalEvent }, 0);
+        worldMapFsm.InsertAction(extraUpState,
+            new PlayerDataBoolTest { gameObject = tmpGameObject, boolName = boolName, isTrue = customGlobalEvent }, 0);
+
         #endregion
 
         worldMapFsm.ChangeTransition(caState, "UI LEFT", caLeftState);
@@ -868,7 +951,9 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         worldMapFsm.ChangeTransition("Mines", "UI UP", extraUpState);
         worldMapFsm.AddTransition(extraUpState, "FINISHED", "Mines");
         worldMapFsm.ChangeTransition(extraUpState, "FINISHED", "Mines");
+
         #endregion
+
         wideMap.SetActive(tmpActive);
 
         DebugLog("~ChangeWpMap");
