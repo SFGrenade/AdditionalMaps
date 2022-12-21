@@ -480,7 +480,7 @@ public static class GameMapHooks
             cursor.Emit(OpCodes.Ldfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "pd"));
             cursor.Emit(OpCodes.Ldstr, nameof(PlayerData.equippedCharm_2));
             cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(PlayerData), "GetBool"));
-            cursor.Emit(OpCodes.Brtrue_S, entireOtherInsideIfLabel);
+            cursor.Emit(OpCodes.Brtrue_S, entireInsideIfLabel);
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.Emit(OpCodes.Ldfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "pd"));
             cursor.Emit(OpCodes.Ldstr, "CompassAlwaysOn.Enabled");
