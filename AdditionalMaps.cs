@@ -156,7 +156,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             sceneGo.transform.SetParent(areaWhitePalace.transform);
             sceneGo.layer = 5;
             sceneGo.transform.localScale = Vector3.one;
-            sceneGo.SetActive(true);
+            sceneGo.SetActive(false);
             var sr = sceneGo.GetComponent<SpriteRenderer>();
             sr.material = roomMat;
             sr.sprite = SpriteDict.Get(sceneGo.name);
@@ -251,7 +251,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         {
             sprite.layer = 5;
             sprite.transform.localScale = Vector3.one;
-            sprite.SetActive(true);
+            sprite.SetActive(false);
             var sr = sprite.GetComponent<SpriteRenderer>();
             sr.material = roomMat;
             sr.sprite = SpriteDict.Get(sprite.name);
@@ -302,7 +302,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         #endregion
 
-        areaWhitePalace.SetActive(true);
+        areaWhitePalace.SetActive(false);
         tmpDict.Add(
             "WHITE_PALACE",
             new SCustomArea
@@ -312,7 +312,11 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
                 CameraPosition = new Vector3(3.07f, -23f, 18f),
                 MapZoneStrings = new List<string> { "WHITE_PALACE" },
                 //playerDataBoolGotAreaMap = "AdditionalMapsGotWpMap"
-                PlayerDataBoolGotAreaMap = nameof(SaveSettings.AdditionalMapsGotWpMap)
+                PlayerDataBoolGotAreaMap = nameof(SaveSettings.AdditionalMapsGotWpMap),
+                panMinX = null,
+                panMaxX = null,
+                panMinY = -19,
+                panMaxY = null
             }
         );
 
@@ -321,7 +325,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         #region Godhome Map
 
         areaGodhome = UObject.Instantiate(gameMapBetter.areaCliffs, gameMapBetter.transform);
-        areaGodhome.SetActive(true);
+        areaGodhome.SetActive(false);
 
         for (var i = 0; i < areaGodhome.transform.childCount; i++)
         {
@@ -344,7 +348,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             sceneGo.transform.SetParent(areaGodhome.transform);
             sceneGo.layer = 5;
             sceneGo.transform.localScale = Vector3.one;
-            sceneGo.SetActive(true);
+            sceneGo.SetActive(false);
             var sr = sceneGo.GetComponent<SpriteRenderer>();
             sr.material = roomMat;
             sr.sprite = SpriteDict.Get(sceneGo.name);
@@ -370,7 +374,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         {
             sprite.layer = 5;
             sprite.transform.localScale = Vector3.one;
-            sprite.SetActive(true);
+            sprite.SetActive(false);
             var sr = sprite.GetComponent<SpriteRenderer>();
             sr.material = roomMat;
             sr.sprite = SpriteDict.Get(sprite.name);
@@ -405,7 +409,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         #endregion
 
-        areaGodhome.SetActive(true);
+        areaGodhome.SetActive(false);
         tmpDict.Add(
             "GODS_GLORY",
             new SCustomArea
@@ -413,7 +417,11 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
                 AreaGameObject = areaGodhome,
                 CameraPosition = new Vector3(-8.5f, -22f, 18f),
                 MapZoneStrings = new List<string> { "GODS_GLORY" },
-                PlayerDataBoolGotAreaMap = nameof(SaveSettings.AdditionalMapsGotGhMap)
+                PlayerDataBoolGotAreaMap = nameof(SaveSettings.AdditionalMapsGotGhMap),
+                panMinX = -5.0f,
+                panMaxX = null,
+                panMinY = -19.0f,
+                panMaxY = null
             }
         );
 

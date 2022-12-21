@@ -22,6 +22,10 @@ public struct SCustomArea
     public Vector3 CameraPosition;
     public string PlayerDataBoolGotAreaMap;
     public List<string> MapZoneStrings;
+    public float? panMinX;
+    public float? panMaxX;
+    public float? panMinY;
+    public float? panMaxY;
 }
 
 public class ActionArg
@@ -406,7 +410,7 @@ public static class GameMapHooks
     private static void Log(string message)
     {
         var outMsg = $"[AdditionalMaps][MonoBehaviours][GameMapHooks] - {message}";
-        MLogger.Log(outMsg);
+        MLogger.LogDebug(outMsg);
         ULogger.Log(outMsg);
     }
 
@@ -439,6 +443,23 @@ public static class GameMapHooks
         cursor.Goto(0);
         cursor.GotoNext(MoveType.Before, x => x.MatchLdarg(0), x => x.MatchLdfld<GameMap>("flamePins"));
 
+        List<ILLabel> labelsToRedirect = new List<ILLabel>();
+        foreach (Instruction ilInstr in il.Instrs)
+        {
+            if (ilInstr.Operand is ILLabel ilLabel)
+            {
+                if (ilInstr.Offset > 0 && ilInstr.Offset <= cursor.Prev.Offset && ilLabel.Target.Offset > 0 &&
+                    ilLabel.Target.Offset >= cursor.Next.Offset)
+                {
+                    if (!labelsToRedirect.Contains(ilLabel))
+                    {
+                        Log($"Label from {ilInstr.Offset} to {ilLabel.Target.Offset} while being before {cursor.Next.Offset} has to be adjusted");
+                        labelsToRedirect.Add(ilLabel);
+                    }
+                }
+            }
+        }
+
         ILLabel previousEntireOutsideIfLabel = null;
         foreach ((string key, SCustomArea data) in CustomAreas)
         {
@@ -452,6 +473,11 @@ public static class GameMapHooks
             {
                 previousEntireOutsideIfLabel.Target = cursor.Prev;
             }
+            foreach (ILLabel ilLabel in labelsToRedirect)
+            {
+                ilLabel.Target = cursor.Prev;
+            }
+            labelsToRedirect.Clear();
             cursor.Emit(OpCodes.Ldfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "pd"));
             cursor.Emit(OpCodes.Ldstr, data.PlayerDataBoolGotAreaMap);
             cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(PlayerData), "GetBool"));
@@ -487,23 +513,76 @@ public static class GameMapHooks
             cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(PlayerData), "GetBool"));
             cursor.Emit(OpCodes.Brfalse_S, entireOutsideIfLabel);
 
-            /*
-             * data.AreaGameObject.SetActive(this.pd.GetBool(data.PlayerDataBoolGotAreaMap));
-             */
+            // data.AreaGameObject.SetActive(this.pd.GetBool(data.PlayerDataBoolGotAreaMap));
             cursor.EmitReference(data.AreaGameObject);
-            entireInsideIfLabel.Target = cursor.Prev;
+            entireInsideIfLabel.Target = cursor.Prev.Previous;
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.Emit(OpCodes.Ldfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "pd"));
             cursor.Emit(OpCodes.Ldstr, data.PlayerDataBoolGotAreaMap);
             cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(PlayerData), "GetBool"));
             cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(GameObject), "SetActive"));
+            
+            if (data.panMinX is not null)
+            {
+                // this.panMinX = Mathf.Min(this.panMinX, data.panMinX);
+                cursor.Emit(OpCodes.Ldarg_0);
+                cursor.Emit(OpCodes.Ldarg_0);
+                cursor.Emit(OpCodes.Ldfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "panMinX"));
+                cursor.Emit(OpCodes.Ldc_R4, data.panMinX);
+                cursor.Emit(OpCodes.Callvirt, typeof(Mathf).GetMethods(BindingFlags.Static | BindingFlags.Public).First(x => x.Name == "Min" && x.GetParameters()[0].ParameterType == typeof(float)));
+                cursor.Emit(OpCodes.Stfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "panMinX"));
+            }
+            if (data.panMaxX is not null)
+            {
+                // this.panMinY = Mathf.Min(this.panMinY, data.panMaxX);
+                cursor.Emit(OpCodes.Ldarg_0);
+                cursor.Emit(OpCodes.Ldarg_0);
+                cursor.Emit(OpCodes.Ldfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "panMaxX"));
+                cursor.Emit(OpCodes.Ldc_R4, data.panMaxX);
+                cursor.Emit(OpCodes.Callvirt, typeof(Mathf).GetMethods(BindingFlags.Static | BindingFlags.Public).First(x => x.Name == "Max" && x.GetParameters()[0].ParameterType == typeof(float)));
+                cursor.Emit(OpCodes.Stfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "panMaxX"));
+            }
+            if (data.panMinY is not null)
+            {
+                // this.panMaxX = Mathf.Min(this.panMaxX, data.panMinY);
+                cursor.Emit(OpCodes.Ldarg_0);
+                cursor.Emit(OpCodes.Ldarg_0);
+                cursor.Emit(OpCodes.Ldfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "panMinY"));
+                cursor.Emit(OpCodes.Ldc_R4, data.panMinY);
+                cursor.Emit(OpCodes.Callvirt, typeof(Mathf).GetMethods(BindingFlags.Static | BindingFlags.Public).First(x => x.Name == "Min" && x.GetParameters()[0].ParameterType == typeof(float)));
+                cursor.Emit(OpCodes.Stfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "panMinY"));
+            }
+            if (data.panMaxY is not null)
+            {
+                // this.panMaxY = Mathf.Min(this.panMaxY, data.panMaxY);
+                cursor.Emit(OpCodes.Ldarg_0);
+                cursor.Emit(OpCodes.Ldarg_0);
+                cursor.Emit(OpCodes.Ldfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "panMaxY"));
+                cursor.Emit(OpCodes.Ldc_R4, data.panMaxY);
+                cursor.Emit(OpCodes.Callvirt, typeof(Mathf).GetMethods(BindingFlags.Static | BindingFlags.Public).First(x => x.Name == "Max" && x.GetParameters()[0].ParameterType == typeof(float)));
+                cursor.Emit(OpCodes.Stfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "panMaxY"));
+            }
+            cursor.Emit(OpCodes.Nop);
 
             previousEntireOutsideIfLabel = entireOutsideIfLabel;
         }
         if (previousEntireOutsideIfLabel != null)
         {
-            previousEntireOutsideIfLabel.Target = cursor.Prev.Next;
+            previousEntireOutsideIfLabel.Target = cursor.Prev;
         }
+        
+        cursor.Goto(0);
+        Instruction instr = cursor.Next;
+        while (instr.OpCode != OpCodes.Ret)
+        {
+            Log($"{instr.Offset} - {instr.OpCode} - {instr.Operand}");
+            if (instr.Operand is ILLabel label)
+            {
+                Log($"    - Branch to: {label.Target.Offset} - {label.Target.OpCode} - {label.Target.Operand}");
+            }
+            instr = instr.Next;
+        }
+        Log($"{instr.Offset} - {instr.OpCode} - {instr.Operand}");
     }
 
     public static void NewQuickMapAncientBasin(On.GameMap.orig_QuickMapAncientBasin orig, GameMap self)
