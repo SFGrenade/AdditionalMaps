@@ -100,14 +100,14 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         #region Prefabs
 
-        var areaNamePrefab = UObject.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(0).gameObject);
+        var areaNamePrefab = UObject.Instantiate(gameMapBetter.areaCliffs.Find("Area Name (1)"));
         areaNamePrefab.SetActive(false);
-        var subAreaPrefab = UObject.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(6).GetChild(0).gameObject);
+        var subAreaPrefab = UObject.Instantiate(gameMapBetter.areaCliffs.Find("Cliffs_05").Find("Sub Area Name (4)"));
         subAreaPrefab.SetActive(false);
         var roomMat =
-            UObject.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(1).GetComponent<SpriteRenderer>().material);
+            UObject.Instantiate(gameMapBetter.areaCliffs.Find("Cliffs_01").GetComponent<SpriteRenderer>().material);
         DefaultSpriteMaterial = roomMat;
-        var benchPrefab = UObject.Instantiate(gameMapBetter.areaCliffs.transform.GetChild(3).GetChild(2).gameObject);
+        var benchPrefab = UObject.Instantiate(gameMapBetter.areaCliffs.Find("Cliffs_02").Find("pin_bench"));
         benchPrefab.SetActive(false);
 
         var tmpDict = new Dictionary<string, SCustomArea>();
@@ -119,7 +119,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         areaWhitePalace = UObject.Instantiate(gameMapBetter.areaCliffs, gameMapBetter.transform);
         areaWhitePalace.SetActive(false);
 
-        for (var i = 0; i < areaWhitePalace.transform.childCount; i++)
+        for (var i = areaWhitePalace.transform.childCount - 1; i >= 0; i--)
         {
             UObject.Destroy(areaWhitePalace.transform.GetChild(i).gameObject);
         }
@@ -153,10 +153,10 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         };
         foreach (var sceneGo in wpScenes)
         {
+            sceneGo.SetActive(false);
             sceneGo.transform.SetParent(areaWhitePalace.transform);
             sceneGo.layer = 5;
             sceneGo.transform.localScale = Vector3.one;
-            sceneGo.SetActive(false);
             var sr = sceneGo.GetComponent<SpriteRenderer>();
             sr.material = roomMat;
             sr.sprite = SpriteDict.Get(sceneGo.name);
@@ -249,44 +249,52 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         wpRoomSprites[17].transform.localPosition = new Vector3(0.04333333f / roomDivider, 4.23f / roomDivider);
         foreach (var sprite in wpRoomSprites)
         {
+            sprite.SetActive(false);
             sprite.layer = 5;
             sprite.transform.localScale = Vector3.one;
-            sprite.SetActive(false);
             var sr = sprite.GetComponent<SpriteRenderer>();
             sr.material = roomMat;
             sr.sprite = SpriteDict.Get(sprite.name);
             sr.sortingLayerID = 629535577;
             sr.sortingOrder = 0;
+            sprite.SetActive(true);
         }
 
         wpRoomSprites[17].transform.localScale = new Vector3(1.0f / 0.93f, 1.0f / 1.04f, 1.0f);
 
         var pathOfPainArea = UObject.Instantiate(subAreaPrefab, wpScenes[15].transform);
-        pathOfPainArea.SetActive(true);
+        pathOfPainArea.SetActive(false);
         pathOfPainArea.transform.localPosition = new Vector3(5.875f, -0.8f, pathOfPainArea.transform.localPosition.z);
         pathOfPainArea.GetComponent<SetTextMeshProGameText>().convName = Consts.LanguageStrings.PathOfPainKey;
+        pathOfPainArea.SetActive(true);
 
         var workshopArea = UObject.Instantiate(subAreaPrefab, wpScenes[7].transform);
-        workshopArea.SetActive(true);
+        workshopArea.SetActive(false);
         workshopArea.transform.localPosition = new Vector3(5f, -1.25f, workshopArea.transform.localPosition.z);
         workshopArea.GetComponent<SetTextMeshProGameText>().convName = Consts.LanguageStrings.WorkshopKey;
+        workshopArea.SetActive(true);
 
         var creditsArea = UObject.Instantiate(subAreaPrefab, wpScenes[6].transform);
-        creditsArea.SetActive(true);
+        creditsArea.SetActive(false);
         creditsArea.transform.localPosition = new Vector3(7f, -1.5f, creditsArea.transform.localPosition.z);
+        creditsArea.transform.SetParent(areaWhitePalace.transform, true);
         creditsArea.GetComponent<SetTextMeshProGameText>().convName = Consts.LanguageStrings.CreditsKey;
         var rectT = creditsArea.GetComponent<RectTransform>();
         rectT.sizeDelta = new Vector2(rectT.sizeDelta.x + 1, rectT.sizeDelta.y);
+        creditsArea.SetActive(true);
 
         #region Benches
 
         var tmp = UObject.Instantiate(benchPrefab, wpRoomSprites[0].transform);
+        tmp.SetActive(false);
         tmp.transform.localPosition = new Vector3(-0.4f, -0.5f, -0.013f);
         tmp.SetActive(true);
         var tmp2 = UObject.Instantiate(benchPrefab, wpRoomSprites[2].transform);
+        tmp2.SetActive(false);
         tmp2.transform.localPosition = new Vector3(0.05f, -0.15f, -0.013f);
         tmp2.SetActive(true);
         var tmp3 = UObject.Instantiate(benchPrefab, wpRoomSprites[5].transform);
+        tmp3.SetActive(false);
         tmp3.transform.localPosition = new Vector3(-0.1f, 0.45f, -0.013f);
         tmp3.SetActive(true);
 
@@ -295,6 +303,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         #region Area Name
 
         var wpAreaNameArea = UObject.Instantiate(areaNamePrefab, areaWhitePalace.transform);
+        wpAreaNameArea.SetActive(false);
         wpAreaNameArea.transform.localPosition =
             new Vector3(6.433125f, 1.6825f, wpAreaNameArea.transform.localPosition.z);
         wpAreaNameArea.GetComponent<SetTextMeshProGameText>().convName = "WHITE_PALACE";
@@ -302,6 +311,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         #endregion
 
+        areaWhitePalace.SetActive(true);
         areaWhitePalace.SetActive(false);
         tmpDict.Add(
             "WHITE_PALACE",
@@ -315,7 +325,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
                 PlayerDataBoolGotAreaMap = nameof(SaveSettings.AdditionalMapsGotWpMap),
                 panMinX = null,
                 panMaxX = null,
-                panMinY = -19,
+                panMinY = -20,
                 panMaxY = null
             }
         );
@@ -327,7 +337,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         areaGodhome = UObject.Instantiate(gameMapBetter.areaCliffs, gameMapBetter.transform);
         areaGodhome.SetActive(false);
 
-        for (var i = 0; i < areaGodhome.transform.childCount; i++)
+        for (var i = areaGodhome.transform.childCount - 1; i >= 0; i--)
         {
             UObject.Destroy(areaGodhome.transform.GetChild(i).gameObject);
         }
@@ -346,9 +356,9 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         foreach (var sceneGo in ghScenes)
         {
             sceneGo.transform.SetParent(areaGodhome.transform);
+            sceneGo.SetActive(false);
             sceneGo.layer = 5;
             sceneGo.transform.localScale = Vector3.one;
-            sceneGo.SetActive(false);
             var sr = sceneGo.GetComponent<SpriteRenderer>();
             sr.material = roomMat;
             sr.sprite = SpriteDict.Get(sceneGo.name);
@@ -372,29 +382,34 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         ghRoomSprites[1].transform.localPosition = new Vector3(0.6480024f, -0.187f);
         foreach (var sprite in ghRoomSprites)
         {
+            sprite.SetActive(false);
             sprite.layer = 5;
             sprite.transform.localScale = Vector3.one;
-            sprite.SetActive(false);
             var sr = sprite.GetComponent<SpriteRenderer>();
             sr.material = roomMat;
             sr.sprite = SpriteDict.Get(sprite.name);
             sr.sortingLayerID = 629535577;
             sr.sortingOrder = 0;
+            sprite.SetActive(true);
         }
 
         var creditsArea2 = UObject.Instantiate(subAreaPrefab, ghScenes[0].transform);
-        creditsArea2.SetActive(true);
+        creditsArea2.SetActive(false);
         creditsArea2.transform.localPosition = new Vector3(8f, 1.5f, creditsArea2.transform.localPosition.z);
+        creditsArea2.transform.SetParent(areaGodhome.transform, true);
         creditsArea2.GetComponent<SetTextMeshProGameText>().convName = Consts.LanguageStrings.CreditsKey;
         var rectT2 = creditsArea2.GetComponent<RectTransform>();
         rectT2.sizeDelta = new Vector2(rectT2.sizeDelta.x + 1, rectT2.sizeDelta.y);
+        creditsArea2.SetActive(true);
 
         #region Benches
 
         var tmpBench = UObject.Instantiate(benchPrefab, ghRoomSprites[0].transform);
+        tmpBench.SetActive(false);
         tmpBench.transform.localPosition = new Vector3(0.925f, 0.5f, -0.013f);
         tmpBench.SetActive(true);
         var tmpBench2 = UObject.Instantiate(benchPrefab, ghRoomSprites[1].transform);
+        tmpBench2.SetActive(false);
         tmpBench2.transform.localPosition = new Vector3(0.8f, -0.1f, -0.013f);
         tmpBench2.SetActive(true);
 
@@ -403,12 +418,14 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         #region Area Name
 
         var ghAreaNameArea = UObject.Instantiate(areaNamePrefab, areaGodhome.transform);
+        ghAreaNameArea.SetActive(false);
         ghAreaNameArea.transform.localPosition = new Vector3(5.208f, 0.65f, ghAreaNameArea.transform.localPosition.z);
         ghAreaNameArea.GetComponent<SetTextMeshProGameText>().convName = "GODS_GLORY";
         ghAreaNameArea.SetActive(true);
 
         #endregion
 
+        areaGodhome.SetActive(true);
         areaGodhome.SetActive(false);
         tmpDict.Add(
             "GODS_GLORY",
@@ -427,7 +444,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         #endregion
 
-        UObject.Destroy(subAreaPrefab);
+        //UObject.Destroy(subAreaPrefab);
         Log("~gameMapCallback");
         return tmpDict;
     }
