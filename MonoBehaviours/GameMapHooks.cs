@@ -61,6 +61,17 @@ public static class GameMapHooks
     {
         try
         {
+            IL.GameMap.WorldMap -= IlWorldMap;
+        }
+        catch
+        {
+        }
+        finally
+        {
+            IL.GameMap.WorldMap += IlWorldMap;
+        }
+        try
+        {
             On.GameMap.QuickMapAncientBasin -= NewQuickMapAncientBasin;
         }
         catch
@@ -241,26 +252,14 @@ public static class GameMapHooks
 
         try
         {
-            On.GameMap.PositionCompass -= NewPositionCompass;
+            IL.GameMap.PositionCompass -= IlPositionCompass;
         }
         catch
         {
         }
         finally
         {
-            On.GameMap.PositionCompass += NewPositionCompass;
-        }
-
-        try
-        {
-            IL.GameMap.WorldMap -= IlWorldMap;
-        }
-        catch
-        {
-        }
-        finally
-        {
-            IL.GameMap.WorldMap += IlWorldMap;
+            IL.GameMap.PositionCompass += IlPositionCompass;
         }
     }
 
@@ -416,27 +415,6 @@ public static class GameMapHooks
 
     #region New Functions
 
-    private static void NewWorldMap(On.GameMap.orig_WorldMap orig, GameMap self)
-    {
-        orig(self);
-
-        self.panMinX = float.MinValue; //-1.44f;
-        self.panMaxX = float.MaxValue; //4.55f;
-        self.panMinY = float.MinValue; //-8.642f;
-        self.panMaxY = float.MaxValue; //-5.58f;
-
-        var pd = PlayerData.instance;
-        var currentMapZone = GameManager.instance.GetCurrentMapZone();
-        foreach (var pair in from pair in CustomAreas
-                 where pd.GetBool(pair.Value.PlayerDataBoolGotAreaMap) ||
-                       pair.Value.MapZoneStrings.Contains(currentMapZone) &&
-                       pd.GetBool("equippedCharm_2")
-                 where pd.GetBool(pair.Value.PlayerDataBoolGotAreaMap)
-                 where pair.Value.AreaGameObject != null
-                 select pair)
-            pair.Value.AreaGameObject.SetActive(true);
-    }
-
     private static void IlWorldMap(ILContext il)
     {
         ILCursor cursor = new ILCursor(il);
@@ -570,19 +548,6 @@ public static class GameMapHooks
         {
             previousEntireOutsideIfLabel.Target = cursor.Prev;
         }
-        
-        cursor.Goto(0);
-        Instruction instr = cursor.Next;
-        while (instr.OpCode != OpCodes.Ret)
-        {
-            Log($"{instr.Offset} - {instr.OpCode} - {instr.Operand}");
-            if (instr.Operand is ILLabel label)
-            {
-                Log($"    - Branch to: {label.Target.Offset} - {label.Target.OpCode} - {label.Target.Operand}");
-            }
-            instr = instr.Next;
-        }
-        Log($"{instr.Offset} - {instr.OpCode} - {instr.Operand}");
     }
 
     public static void NewQuickMapAncientBasin(On.GameMap.orig_QuickMapAncientBasin orig, GameMap self)
@@ -677,168 +642,149 @@ public static class GameMapHooks
             pair.Value.AreaGameObject.SetActive(false);
     }
 
-    private static void NewPositionCompass(On.GameMap.orig_PositionCompass orig, GameMap self, bool posShade)
+    private static void IlPositionCompass(ILContext il)
     {
-        GameObject gameObject = null;
-        var currentMapZone = ReflectionHelper.GetField<GameMap, GameManager>(self, "gm").GetCurrentMapZone();
-
-        string sceneName;
-        if (!self.inRoom)
+        ILCursor cursor = new ILCursor(il);
+        cursor.Goto(0);
+        /*
+         * removes:
+         * if (currentMapZone == "DREAM_WORLD" || currentMapZone == "WHITE_PALACE" || currentMapZone == "GODS_GLORY")
+         * {
+         *     this.compassIcon.SetActive(false);
+         *     this.displayingCompass = false;
+         *     return;
+         * }
+         */
+        if (cursor.TryGotoNext(MoveType.Before, x => x.MatchLdloc(1), x => x.MatchLdstr("DREAM_WORLD")))
         {
-            sceneName = ReflectionHelper.GetField<GameMap, GameManager>(self, "gm").sceneName;
+            cursor.RemoveRange(20);
         }
-        else
-        {
-            currentMapZone = self.doorMapZone;
-            sceneName = self.doorScene;
-        }
+        /*
+         * move before:
+         * if (this.currentScene != null) { ...
+         */
+        cursor.GotoNext(MoveType.Before, x => x.MatchLdarg(0), x => x.MatchLdfld<GameMap>("currentScene"), x => x.MatchLdnull());
 
-        switch (currentMapZone)
+        // redirect labels/gotos that go from before our spot to after our spot
+        List<ILLabel> labelsToRedirect = new List<ILLabel>();
+        foreach (Instruction ilInstr in il.Instrs)
         {
-            case "ABYSS":
-                gameObject = self.areaAncientBasin;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "CITY":
-            case "KINGS_STATION":
-            case "SOUL_SOCIETY":
-            case "LURIENS_TOWER":
-                gameObject = self.areaCity;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "CLIFFS":
-                gameObject = self.areaCliffs;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "CROSSROADS":
-            case "SHAMAN_TEMPLE":
-                gameObject = self.areaCrossroads;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "MINES":
-                gameObject = self.areaCrystalPeak;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "DEEPNEST":
-            case "BEASTS_DEN":
-                gameObject = self.areaDeepnest;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "FOG_CANYON":
-            case "MONOMON_ARCHIVE":
-                gameObject = self.areaFogCanyon;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "WASTES":
-            case "QUEENS_STATION":
-                gameObject = self.areaFungalWastes;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "GREEN_PATH":
-                gameObject = self.areaGreenpath;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "OUTSKIRTS":
-            case "HIVE":
-            case "COLOSSEUM":
-                gameObject = self.areaKingdomsEdge;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "ROYAL_GARDENS":
-                gameObject = self.areaQueensGardens;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "RESTING_GROUNDS":
-                gameObject = self.areaRestingGrounds;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "TOWN":
-            case "KINGS_PASS":
-                gameObject = self.areaDirtmouth;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-            case "WATERWAYS":
-            case "GODSEEKER_WASTE":
-                gameObject = self.areaWaterways;
-                self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-                break;
-        }
-
-        foreach (var pair in CustomAreas.Where(pair => pair.Value.MapZoneStrings.Contains(currentMapZone))
-                     .Where(pair => pair.Value.AreaGameObject != null))
-        {
-            gameObject = pair.Value.AreaGameObject;
-            self.currentScene = gameObject.FindGameObjectInChildren(sceneName);
-        }
-
-        if (self.currentScene != null)
-        {
-            if (gameObject is not null)
-                self.currentScenePos =
-                    new Vector3(
-                        self.currentScene.transform.localPosition.x + gameObject.transform.localPosition.x,
-                        self.currentScene.transform.localPosition.y + gameObject.transform.localPosition.y,
-                        0f);
-
-            switch (posShade)
+            if (ilInstr.Operand is ILLabel ilLabel)
             {
-                case false when !ReflectionHelper.GetField<GameMap, bool>(self, "posGate"):
+                if (ilInstr.Offset > 0 && ilInstr.Offset <= cursor.Prev.Offset && ilLabel.Target.Offset > 0 &&
+                    ilLabel.Target.Offset >= cursor.Next.Offset)
                 {
-                    if (ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").GetBool("equippedCharm_2"))
+                    if (!labelsToRedirect.Contains(ilLabel))
                     {
-                        ReflectionHelper.SetField(self, "displayingCompass", true);
-                        self.compassIcon.SetActive(true);
+                        Log($"Label from {ilInstr.Offset} to {ilLabel.Target.Offset} while being before {cursor.Next.Offset} has to be adjusted");
+                        labelsToRedirect.Add(ilLabel);
                     }
-                    else
-                    {
-                        ReflectionHelper.SetField(self, "displayingCompass", false);
-                        self.compassIcon.SetActive(false);
-                    }
-
-                    break;
-                }
-                case true:
-                {
-                    if (!self.inRoom)
-                    {
-                        self.shadeMarker.transform.localPosition =
-                            new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f);
-                    }
-                    else
-                    {
-                        var x = self.currentScenePos.x -
-                                self.currentScene.GetComponent<SpriteRenderer>().sprite.rect.size.x / 100f / 2f +
-                                (self.doorX + self.doorOriginOffsetX) / self.doorSceneWidth *
-                                (self.currentScene.GetComponent<SpriteRenderer>().sprite.rect.size.x / 100f *
-                                 self.transform.localScale.x) / self.transform.localScale.x;
-                        var y = self.currentScenePos.y -
-                                self.currentScene.GetComponent<SpriteRenderer>().sprite.rect.size.y / 100f / 2f +
-                                (self.doorY + self.doorOriginOffsetY) / self.doorSceneHeight *
-                                (self.currentScene.GetComponent<SpriteRenderer>().sprite.rect.size.y / 100f *
-                                 self.transform.localScale.y) / self.transform.localScale.y;
-                        self.shadeMarker.transform.localPosition = new Vector3(x, y, 0f);
-                    }
-
-                    ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").SetVector3("shadeMapPos",
-                        new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f));
-                    break;
                 }
             }
-
-            if (!ReflectionHelper.GetField<GameMap, bool>(self, "posGate")) return;
-            self.dreamGateMarker.transform.localPosition =
-                new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f);
-            ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").SetVector3("dreamgateMapPos",
-                new Vector3(self.currentScenePos.x, self.currentScenePos.y, 0f));
         }
-        else
+        
+        ILLabel previousEntireOutsideIfLabel = null;
+        foreach ((string key, SCustomArea data) in CustomAreas)
         {
-            Log("Couldn't find current scene object!");
-            if (!posShade) return;
-            ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd")
-                .SetVector3("shadeMapPos", new Vector3(-10000f, -10000f, 0f));
-            self.shadeMarker.transform.localPosition =
-                ReflectionHelper.GetField<GameMap, PlayerData>(self, "pd").GetVector3("shadeMapPos");
+            Log($"Adding area '{key}' to method!");
+            ILLabel entireOutsideIfLabel = il.DefineLabel();
+            bool doneSettingLabelTarget = false;
+
+            ILLabel entireInsideIfLabel = il.DefineLabel();
+            for (int i = 0; i < data.MapZoneStrings.Count - 1; i++)
+            {
+                // ... (||) currentMapZone == areaKey (||) ...
+                cursor.Emit(OpCodes.Ldloc_1);
+                if (previousEntireOutsideIfLabel != null && !doneSettingLabelTarget)
+                {
+                    previousEntireOutsideIfLabel.Target = cursor.Prev;
+                    doneSettingLabelTarget = true;
+                }
+                foreach (ILLabel ilLabel in labelsToRedirect)
+                {
+                    ilLabel.Target = cursor.Prev;
+                }
+                labelsToRedirect.Clear();
+                cursor.Emit(OpCodes.Ldstr, data.MapZoneStrings[i]);
+                cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(string), "op_Equality", false));
+                cursor.Emit(OpCodes.Brtrue_S, entireInsideIfLabel);
+            }
+            if (data.MapZoneStrings.Count > 0)
+            {
+                // ... (||) currentMapZone == areaKey ...
+                cursor.Emit(OpCodes.Ldloc_1);
+                if (previousEntireOutsideIfLabel != null && !doneSettingLabelTarget)
+                {
+                    previousEntireOutsideIfLabel.Target = cursor.Prev;
+                }
+                foreach (ILLabel ilLabel in labelsToRedirect)
+                {
+                    ilLabel.Target = cursor.Prev;
+                }
+                labelsToRedirect.Clear();
+                cursor.Emit(OpCodes.Ldstr, data.MapZoneStrings[data.MapZoneStrings.Count - 1]);
+                cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(string), "op_Equality", false));
+                cursor.Emit(OpCodes.Brfalse_S, entireOutsideIfLabel);
+            }
+            // gameObject = data.AreaGameObject;
+            cursor.EmitReference(data.AreaGameObject);
+            entireInsideIfLabel.Target = cursor.Prev.Previous;
+            cursor.Emit(OpCodes.Stloc_0);
+
+            // for (int num8 = 0; ...
+            ILLabel forLoopHeadLabel = il.DefineLabel();
+            cursor.Emit(OpCodes.Ldc_I4_0);
+            cursor.Emit(OpCodes.Stloc_S, (byte) 29);
+            cursor.Emit(OpCodes.Br_S, forLoopHeadLabel);
+            
+            // GameObject gameObject15 = gameObject.transform.GetChild(num8).gameObject;
+            ILLabel forLoopContentLabel = il.DefineLabel();
+            cursor.Emit(OpCodes.Ldloc_0);
+            forLoopContentLabel.Target = cursor.Prev;
+            cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetPropertyInfo(typeof(GameObject), "transform").GetGetMethod());
+            cursor.Emit(OpCodes.Ldloc_S, (byte) 29);
+            cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(Transform), "GetChild"));
+            cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetPropertyInfo(typeof(Component), "gameObject").GetGetMethod());
+            cursor.Emit(OpCodes.Stloc_S, (byte) 30);
+
+            // if (gameObject15.name == sceneName)
+            ILLabel forLoopIfNameLabel = il.DefineLabel();
+            cursor.Emit(OpCodes.Ldloc_S, (byte) 30);
+            cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetPropertyInfo(typeof(UnityEngine.Object), "name").GetGetMethod());
+            cursor.Emit(OpCodes.Ldloc_2);
+            cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(string), "op_Equality", false));
+            cursor.Emit(OpCodes.Brfalse_S, forLoopIfNameLabel);
+            
+            // this.currentScene = gameObject15;
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.Emit(OpCodes.Ldloc_S, (byte) 30);
+            cursor.Emit(OpCodes.Stfld, ReflectionHelper.GetFieldInfo(typeof(GameMap), "currentScene"));
+
+            // break;
+            cursor.Emit(OpCodes.Br_S, entireOutsideIfLabel);
+
+            // ... num8++)
+            cursor.Emit(OpCodes.Ldloc_S, (byte) 29);
+            forLoopIfNameLabel.Target = cursor.Prev;
+            cursor.Emit(OpCodes.Ldc_I4_1);
+            cursor.Emit(OpCodes.Add);
+            cursor.Emit(OpCodes.Stloc_S, (byte) 29);
+            
+            // ... num8 < gameObject.transform.childCount; ...
+            cursor.Emit(OpCodes.Ldloc_S, (byte) 29);
+            forLoopHeadLabel.Target = cursor.Prev;
+            cursor.Emit(OpCodes.Ldloc_0);
+            cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetPropertyInfo(typeof(GameObject), "transform").GetGetMethod());
+            cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetPropertyInfo(typeof(Transform), "childCount").GetGetMethod());
+            cursor.Emit(OpCodes.Blt_S, forLoopContentLabel);
+
+            cursor.Emit(OpCodes.Nop);
+
+            previousEntireOutsideIfLabel = entireOutsideIfLabel;
+        }
+        if (previousEntireOutsideIfLabel != null)
+        {
+            previousEntireOutsideIfLabel.Target = cursor.Prev;
         }
     }
 
