@@ -166,6 +166,9 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             rmr.fullSprite = sr.sprite;
         }
 
+        // Initialize map with the atrium always showing
+        wpScenes.Find(s => s.name is TextureStrings.Wp03Key)?.SetActive(true);
+
         var tmpChildZ = gameMapBetter.areaCliffs.transform.GetChild(6).localPosition.z;
         const float sceneDivider = 500.0f + (100.0f / 3.0f);
         wpScenes[0].transform.localPosition = new Vector3(-375 / sceneDivider, -2510 / sceneDivider, tmpChildZ);
@@ -368,6 +371,9 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             rmr.fullSprite = sr.sprite;
         }
 
+        // Initialize map with the atrium always showing
+        ghScenes.Find(s => s.name is TextureStrings.GhAKey)?.SetActive(true);
+
         ghScenes[0].transform.localPosition = new Vector3(0.3687f, -2.678f, tmpChildZ);
         ghScenes[1].transform.localPosition = new Vector3(-0.708f, 0.65f, tmpChildZ);
 
@@ -452,11 +458,60 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
     private void InitCallbacks()
     {
         // Hooks
+        On.GameManager.StartNewGame += OnStartNewGame;
+        On.GameManager.ContinueGame += OnContinueGame;
         ModHooks.LanguageGetHook += OnLanguageGetHook;
         ModHooks.GetPlayerBoolHook += OnGetPlayerBoolHook;
         ModHooks.SetPlayerBoolHook += OnSetPlayerBoolHook;
         UnityEngine.SceneManagement.SceneManager.activeSceneChanged += OnSceneManagerActiveSceneChanged;
         IL.SceneManager.AddSceneMapped += OnSceneManagerAddSceneMapped;
+    }
+
+    private static void OnStartNewGame(On.GameManager.orig_StartNewGame orig, GameManager self, bool permadeathMode, bool bossRushMode)
+    {
+        orig(self, permadeathMode, bossRushMode);
+        TruncateScenesMapped();
+    }
+
+    private static void OnContinueGame(On.GameManager.orig_ContinueGame orig, GameManager self)
+    {
+        orig(self);
+        TruncateScenesMapped();
+    }
+
+    private static readonly string[] _allScenes =
+    {
+        TextureStrings.Wp01Key,
+        TextureStrings.Wp02Key,
+        //TextureStrings.Wp03Key,
+        TextureStrings.Wp04Key,
+        TextureStrings.Wp05Key,
+        TextureStrings.Wp06Key,
+        TextureStrings.Wp07Key,
+        TextureStrings.Wp08Key,
+        TextureStrings.Wp09Key,
+        TextureStrings.Wp12Key,
+        TextureStrings.Wp13Key,
+        TextureStrings.Wp14Key,
+        TextureStrings.Wp15Key,
+        TextureStrings.Wp16Key,
+        TextureStrings.Wp17Key,
+        TextureStrings.Wp18Key,
+        TextureStrings.Wp19Key,
+        TextureStrings.Wp20Key,
+        //TextureStrings.GhAKey,
+        TextureStrings.GhArKey
+    };
+
+    private static void TruncateScenesMapped()
+    {
+        foreach (string scene in _allScenes)
+        {
+            if (!PlayerData.instance.scenesVisited.Contains(scene))
+            {
+                PlayerData.instance.scenesMapped.Remove(scene);
+            }
+        }
     }
 
     private void OnSceneManagerAddSceneMapped(ILContext il)
