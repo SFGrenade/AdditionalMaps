@@ -6,7 +6,7 @@ namespace AdditionalMaps.MonoBehaviours;
 internal class MappedCustomRoom : MonoBehaviour
 {
     [UsedImplicitly]
-    private void Start()
+    private void Awake()
     {
         for (var i = 0; i < transform.childCount; i++)
         {
