@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Modding;
 using UnityEngine;
@@ -14,6 +15,7 @@ using MonoMod.Cil;
 using SFCore.Generics;
 using SFCore.Utils;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 using Logger = Modding.Logger;
 using UObject = UnityEngine.Object;
 
