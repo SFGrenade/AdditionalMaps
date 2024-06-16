@@ -499,7 +499,7 @@ public static class GameMapHooks
             cursor.Emit(OpCodes.Ldstr, data.PlayerDataBoolGotAreaMap);
             cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(PlayerData), "GetBool"));
             cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(GameObject), "SetActive"));
-            
+
             if (data.panMinX is not null)
             {
                 // this.panMinX = Mathf.Min(this.panMinX, data.panMinX);
@@ -682,7 +682,7 @@ public static class GameMapHooks
                 }
             }
         }
-        
+
         ILLabel previousEntireOutsideIfLabel = null;
         foreach ((string key, SCustomArea data) in CustomAreas)
         {
@@ -736,7 +736,7 @@ public static class GameMapHooks
             cursor.Emit(OpCodes.Ldc_I4_0);
             cursor.Emit(OpCodes.Stloc_S, (byte) 29);
             cursor.Emit(OpCodes.Br_S, forLoopHeadLabel);
-            
+
             // GameObject gameObject15 = gameObject.transform.GetChild(num8).gameObject;
             ILLabel forLoopContentLabel = il.DefineLabel();
             cursor.Emit(OpCodes.Ldloc_0);
@@ -754,7 +754,7 @@ public static class GameMapHooks
             cursor.Emit(OpCodes.Ldloc_2);
             cursor.Emit(OpCodes.Callvirt, ReflectionHelper.GetMethodInfo(typeof(string), "op_Equality", false));
             cursor.Emit(OpCodes.Brfalse_S, forLoopIfNameLabel);
-            
+
             // this.currentScene = gameObject15;
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.Emit(OpCodes.Ldloc_S, (byte) 30);
@@ -769,7 +769,7 @@ public static class GameMapHooks
             cursor.Emit(OpCodes.Ldc_I4_1);
             cursor.Emit(OpCodes.Add);
             cursor.Emit(OpCodes.Stloc_S, (byte) 29);
-            
+
             // ... num8 < gameObject.transform.childCount; ...
             cursor.Emit(OpCodes.Ldloc_S, (byte) 29);
             forLoopHeadLabel.Target = cursor.Prev;
