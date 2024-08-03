@@ -9,7 +9,6 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using SFCore.Utils;
 using UnityEngine;
-using UnityEngine.UIElements;
 using MLogger = Modding.Logger;
 using ULogger = UnityEngine.Debug;
 using Object = UnityEngine.Object;
