@@ -15,8 +15,8 @@
     <LangVersion>latest</LangVersion>
     <PathMap>$(MSBuildProjectDirectory)=source</PathMap>
     <AssemblyOriginatorKeyFile>../sgKey.snk</AssemblyOriginatorKeyFile>
-    <HollowKnightRefs />
-    <ExportDir />
+    <HollowKnightRefs>../HkRefs</HollowKnightRefs>
+    <ExportDir>bin/Publish</ExportDir>
     <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
   </PropertyGroup>
   <Import Project="LocalOverrides.targets" Condition="Exists('LocalOverrides.targets')" />
@@ -26,6 +26,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="$(HollowKnightRefs)/*.dll" />
+    <Reference Condition="!Exists('../SFCore/SFCore.csproj')" Include="$(HollowKnightRefs)/Mods/SFCore/SFCore.dll" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources" />
@@ -33,6 +34,7 @@
     <Folder Include="test" />
     <None Include=".gitignore" />
     <None Include="LICENSE" />
+    <None Include="ModDependencies.txt" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +87,6 @@
     <EmbeddedResource Include="Resources\Godhome\RGH1.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SFCore\SFCore.csproj" />
+    <ProjectReference Condition="Exists('../SFCore/SFCore.csproj')" Include="../SFCore/SFCore.csproj" />
   </ItemGroup>
 </Project>
