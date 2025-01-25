@@ -10,6 +10,10 @@ public class TextureStrings
     // Custom Area & Rooms
     public const string CustomAreaKey = "CustomArea";
     private const string CustomAreaFile = "AdditionalMaps.Resources.CustomArea.png";
+    public const string CustomGhAreaKey = "CustomArea.GH";
+    private const string CustomGhAreaFile = "AdditionalMaps.Resources.CustomArea.GH.png";
+    public const string CustomWpAreaKey = "CustomArea.WP";
+    private const string CustomWpAreaFile = "AdditionalMaps.Resources.CustomArea.WP.png";
     public const string Wp01Key = "White_Palace_01";
     private const string Wp01File = "AdditionalMaps.Resources.White_Palace.WP01.png";
     public const string Wp02Key = "White_Palace_02";
@@ -111,6 +115,8 @@ public class TextureStrings
         var textureFiles = new Dictionary<string, string>
         {
             {CustomAreaKey, CustomAreaFile},
+            {CustomGhAreaKey, CustomGhAreaFile},
+            {CustomWpAreaKey, CustomWpAreaFile},
             {Wp01Key, Wp01File},
             {Wp02Key, Wp02File},
             {Wp03Key, Wp03File},
@@ -173,7 +179,7 @@ public class TextureStrings
 
             // Create sprite from texture
             // Split is to cut off the TestOfTeamwork.Resources. and the .png
-            float pixelsPerUnit = pair.Value.Contains("scattermaps") ? 200 / 3 : 100;
+            float pixelsPerUnit = pair.Value.Contains("scattermaps") ? 64 : 100;
             _dict.Add(pair.Key, Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), pixelsPerUnit, 0, SpriteMeshType.FullRect));
         }
     }

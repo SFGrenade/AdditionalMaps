@@ -780,27 +780,33 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
     #region Custom Area Test
 
+    private static string customAreaNameWp = "White_Palace";
+    private static string boolNameWp = "AdditionalMapsGotWpMap";
+    private static string customGlobalEventWp = $"{customAreaNameWp.ToUpper()}_GLOBAL";
+    private static string customAreaNameGh = "Godhome";
+    private static string boolNameGh = "AdditionalMapsGotGhMap";
+    private static string customGlobalEventGh = $"{customAreaNameGh.ToUpper()}_GLOBAL";
+
     private static void ChangeWpMap(GameObject worldMap, GameObject wideMap)
     {
         DebugLog($"!ChangeWpMap: \"{wideMap}\"");
 
-        const string customAreaName = "White_Palace";
-        const string boolName = "AdditionalMapsGotWpMap";
         var cameraZoomPosition = new Vector3(2.07f, -20f, -22f);
-        var mapAreaPosition = new Vector3(1.02f, -1.75f, -2.3f);
+        var mapAreaPosition = new Vector3(2.25f, -2.25f, -2.3f);
 
         var tmpActive = wideMap.activeSelf;
         wideMap.SetActive(false);
 
         #region temporary Variables
 
-        const string caState = $"{customAreaName} State";
-        const string caLeftState = $"{customAreaName} State Left";
-        const string caRightState = $"{customAreaName} State Right";
-        const string caDownState = $"{customAreaName} State Down";
-        const string caZoomState = $"{customAreaName} State Zoom";
+        string caState = $"{customAreaNameWp} State";
+        string caLeftState = $"{customAreaNameWp} State Left";
+        string caRightState = $"{customAreaNameWp} State Right";
+        string caDownState = $"{customAreaNameWp} State Down";
+        string caZoomState = $"{customAreaNameWp} State Zoom";
 
-        const string extraUpState = "T Up";
+        string townUpState = "T Up";
+        string cliffsUpState = "Cl Up";
 
         #endregion
 
@@ -808,12 +814,12 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         var customPart = UObject.Instantiate(wideMap.transform.GetChild(0).gameObject, wideMap.transform, true);
         customPart.SetActive(false);
-        customPart.name = customAreaName;
+        customPart.name = customAreaNameWp;
         customPart.transform.localPosition = mapAreaPosition;
-        customPart.GetComponent<SpriteRenderer>().sprite = GetSprite(TextureStrings.CustomAreaKey);
-        customPart.GetComponentInChildren<SetTextMeshProGameText>().convName = customAreaName.ToUpper();
-        customPart.transform.Find("Area Name").localPosition += new Vector3(-1.0f, 0, 0);
-        customPart.LocateMyFSM("deactivate").FsmVariables.GetFsmString("playerData bool").Value = boolName;
+        customPart.GetComponent<SpriteRenderer>().sprite = GetSprite(TextureStrings.CustomWpAreaKey);
+        customPart.GetComponentInChildren<SetTextMeshProGameText>().convName = customAreaNameWp.ToUpper();
+        customPart.transform.Find("Area Name").localPosition += new Vector3(-2.75f, 0.5f, 0);
+        customPart.LocateMyFSM("deactivate").FsmVariables.GetFsmString("playerData bool").Value = boolNameWp;
 
         #endregion
 
@@ -838,13 +844,14 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         worldMapFsm.CopyState("Mi Left", caDownState);
         worldMapFsm.CopyState("To Zoom 10", caZoomState);
 
-        worldMapFsm.CopyState("CR Up", extraUpState);
+        worldMapFsm.CopyState("CR Up", townUpState);
+        worldMapFsm.CopyState("CR Up", cliffsUpState);
 
         #endregion
 
         #region Add Custom FSM Variable
 
-        worldMapFsm.AddGameObjectVariable(customAreaName);
+        worldMapFsm.AddGameObjectVariable(customAreaNameWp);
 
         #endregion
 
@@ -853,8 +860,8 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         var tmpActionFindChild = new FindChild
         {
             gameObject = worldMapFsm.GetAction<FindChild>("Init", 10).gameObject,
-            childName = customAreaName,
-            storeResult = wmUcFsmVars.GetFsmGameObject(customAreaName)
+            childName = customAreaNameWp,
+            storeResult = wmUcFsmVars.GetFsmGameObject(customAreaNameWp)
         };
         worldMapFsm.InsertAction("Init", tmpActionFindChild, 11);
 
@@ -862,7 +869,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         #region Add Custom Global Transition
 
-        var customGlobalEvent = worldMapFsm.AddGlobalTransition($"{customAreaName.ToUpper()}_GLOBAL", caState);
+        var customGlobalEvent = worldMapFsm.AddGlobalTransition(customGlobalEventWp, caState);
 
         #endregion
 
@@ -881,12 +888,21 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             gameObject = new FsmOwnerDefault
                 { OwnerOption = OwnerDefaultOption.SpecifyGameObject, GameObject = customPart }
         };
-        worldMapFsm.GetAction<GetLanguageString>(caState, 3).convName = $"MAP_NAME_{customAreaName.ToUpper()}";
-        worldMapFsm.GetAction<SetStringValue>(caState, 5).stringValue = customAreaName.ToUpper();
+        worldMapFsm.GetAction<GetLanguageString>(caState, 3).convName = $"MAP_NAME_{customAreaNameWp.ToUpper()}";
+        worldMapFsm.GetAction<SetStringValue>(caState, 5).stringValue = customGlobalEvent.Name;
         worldMapFsm.GetAction<SetVector3Value>(caState, 6).vector3Value = cameraZoomPosition;
 
-        worldMapFsm.InsertAction(extraUpState,
-            new PlayerDataBoolTest { gameObject = tmpGameObject, boolName = boolName, isTrue = customGlobalEvent }, 0);
+        worldMapFsm.InsertAction(townUpState, new PlayerDataBoolTest { gameObject = tmpGameObject, boolName = boolNameWp, isTrue = customGlobalEvent }, 0);
+        worldMapFsm.InsertAction(cliffsUpState, new PlayerDataBoolTest { gameObject = tmpGameObject, boolName = boolNameWp, isTrue = customGlobalEvent }, 0);
+        worldMapFsm.RemoveAction(cliffsUpState, 1);
+
+        var ghEvent = FsmEvent.GetFsmEvent(customGlobalEventGh);
+        worldMapFsm.InsertAction(caRightState, new PlayerDataBoolTest()
+        {
+            gameObject = tmpGameObject,
+            boolName = boolNameGh,
+            isTrue = ghEvent
+        }, 0);
 
         #endregion
 
@@ -898,10 +914,15 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         worldMapFsm.ChangeTransition(caRightState, "FINISHED", caState);
         worldMapFsm.ChangeTransition(caDownState, "FINISHED", caState);
 
-        worldMapFsm.AddTransition("Town", "UI UP", extraUpState);
-        worldMapFsm.ChangeTransition("Town", "UI UP", extraUpState);
-        worldMapFsm.AddTransition(extraUpState, "FINISHED", "Town");
-        worldMapFsm.ChangeTransition(extraUpState, "FINISHED", "Town");
+        worldMapFsm.AddTransition("Town", "UI UP", townUpState);
+        worldMapFsm.ChangeTransition("Town", "UI UP", townUpState);
+        worldMapFsm.AddTransition(townUpState, "FINISHED", "Town");
+        worldMapFsm.ChangeTransition(townUpState, "FINISHED", "Town");
+
+        worldMapFsm.AddTransition("Cliffs", "UI UP", cliffsUpState);
+        worldMapFsm.ChangeTransition("Cliffs", "UI UP", cliffsUpState);
+        worldMapFsm.AddTransition(cliffsUpState, "FINISHED", "Cliffs");
+        worldMapFsm.ChangeTransition(cliffsUpState, "FINISHED", "Cliffs");
 
         #endregion
 
@@ -914,23 +935,21 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
     {
         DebugLog($"!ChangeWpMap: \"{wideMap}\"");
 
-        const string customAreaName = "Godhome";
-        const string boolName = "AdditionalMapsGotGhMap";
         var cameraZoomPosition = new Vector3(-8.07f, -16f, -22f);
-        var mapAreaPosition = new Vector3(6.02f, -2f, -2.3f);
+        var mapAreaPosition = new Vector3(4.75f, -2.25f, -2.3f);
 
         var tmpActive = wideMap.activeSelf;
         wideMap.SetActive(false);
 
         #region temporary Variables
 
-        const string caState = $"{customAreaName} State";
-        const string caLeftState = $"{customAreaName} State Left";
-        const string caRightState = $"{customAreaName} State Right";
-        const string caDownState = $"{customAreaName} State Down";
-        const string caZoomState = $"{customAreaName} State Zoom";
+        string caState = $"{customAreaNameGh} State";
+        string caLeftState = $"{customAreaNameGh} State Left";
+        string caRightState = $"{customAreaNameGh} State Right";
+        string caDownState = $"{customAreaNameGh} State Down";
+        string caZoomState = $"{customAreaNameGh} State Zoom";
 
-        const string extraUpState = "Mi Up";
+        string extraUpState = "Mi Up";
 
         #endregion
 
@@ -938,12 +957,12 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         var customPart = UObject.Instantiate(wideMap.transform.GetChild(0).gameObject, wideMap.transform, true);
         customPart.SetActive(false);
-        customPart.name = customAreaName;
+        customPart.name = customAreaNameGh;
         customPart.transform.localPosition = mapAreaPosition;
-        customPart.GetComponent<SpriteRenderer>().sprite = GetSprite(TextureStrings.CustomAreaKey);
-        customPart.GetComponentInChildren<SetTextMeshProGameText>().convName = customAreaName.ToUpper();
-        customPart.transform.Find("Area Name").localPosition += new Vector3(-1.0f, 0, 0);
-        customPart.LocateMyFSM("deactivate").FsmVariables.GetFsmString("playerData bool").Value = boolName;
+        customPart.GetComponent<SpriteRenderer>().sprite = GetSprite(TextureStrings.CustomGhAreaKey);
+        customPart.GetComponentInChildren<SetTextMeshProGameText>().convName = customAreaNameGh.ToUpper();
+        customPart.transform.Find("Area Name").localPosition += new Vector3(1.75f, 0.5f, 0);
+        customPart.LocateMyFSM("deactivate").FsmVariables.GetFsmString("playerData bool").Value = boolNameGh;
 
         #endregion
 
@@ -974,7 +993,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         #region Add Custom FSM Variable
 
-        worldMapFsm.AddGameObjectVariable(customAreaName);
+        worldMapFsm.AddGameObjectVariable(customAreaNameGh);
 
         #endregion
 
@@ -983,8 +1002,8 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         var tmpActionFindChild = new FindChild
         {
             gameObject = worldMapFsm.GetAction<FindChild>("Init", 10).gameObject,
-            childName = customAreaName,
-            storeResult = wmUcFsmVars.GetFsmGameObject(customAreaName)
+            childName = customAreaNameGh,
+            storeResult = wmUcFsmVars.GetFsmGameObject(customAreaNameGh)
         };
         worldMapFsm.InsertAction("Init", tmpActionFindChild, 11);
 
@@ -992,7 +1011,7 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
 
         #region Add Custom Global Transition
 
-        var customGlobalEvent = worldMapFsm.AddGlobalTransition($"{customAreaName.ToUpper()}_GLOBAL", caState);
+        var customGlobalEvent = worldMapFsm.AddGlobalTransition(customGlobalEventGh, caState);
 
         #endregion
 
@@ -1011,12 +1030,19 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
             gameObject = new FsmOwnerDefault
                 { OwnerOption = OwnerDefaultOption.SpecifyGameObject, GameObject = customPart }
         };
-        worldMapFsm.GetAction<GetLanguageString>(caState, 3).convName = $"MAP_NAME_{customAreaName.ToUpper()}";
-        worldMapFsm.GetAction<SetStringValue>(caState, 5).stringValue = customAreaName.ToUpper();
+        worldMapFsm.GetAction<GetLanguageString>(caState, 3).convName = $"MAP_NAME_{customAreaNameGh.ToUpper()}";
+        worldMapFsm.GetAction<SetStringValue>(caState, 5).stringValue = customGlobalEvent.Name;
         worldMapFsm.GetAction<SetVector3Value>(caState, 6).vector3Value = cameraZoomPosition;
 
-        worldMapFsm.InsertAction(extraUpState,
-            new PlayerDataBoolTest { gameObject = tmpGameObject, boolName = boolName, isTrue = customGlobalEvent }, 0);
+        worldMapFsm.InsertAction(extraUpState, new PlayerDataBoolTest { gameObject = tmpGameObject, boolName = boolNameGh, isTrue = customGlobalEvent }, 0);
+
+        var wpEvent = FsmEvent.GetFsmEvent(customGlobalEventWp);
+        worldMapFsm.InsertAction(caLeftState, new PlayerDataBoolTest()
+        {
+            gameObject = tmpGameObject,
+            boolName = boolNameWp,
+            isTrue = wpEvent
+        }, 0);
 
         #endregion
 

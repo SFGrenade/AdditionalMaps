@@ -38,53 +38,10 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Language.json" />
-    <EmbeddedResource Include="Resources\CustomArea.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP01.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP02.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP03.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP04.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP05.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP06.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP07.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP08.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP09.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP12.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP13.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP14.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP15.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP16.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP17.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP18.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP19.png" />
-    <EmbeddedResource Include="Resources\White_Palace\WP20.png" />
-    <EmbeddedResource Include="Resources\White_Palace\White_Palace_Transparent.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP01.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP02.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP03.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP04.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP05.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP06.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP07.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP08.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP09.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP12.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP13.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP14.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP15.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP16.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP17.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP18.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP19.png" />
-    <EmbeddedResource Include="Resources\White_Palace\RWP20.png" />
-    <EmbeddedResource Include="Resources\MapIcon.png" />
-    <EmbeddedResource Include="Resources\scattermaps1.png" />
-    <EmbeddedResource Include="Resources\scattermaps2.png" />
-    <EmbeddedResource Include="Resources\scattermaps3.png" />
-    <EmbeddedResource Include="Resources\Godhome\GH0.png" />
-    <EmbeddedResource Include="Resources\Godhome\GH1.png" />
-    <EmbeddedResource Include="Resources\Godhome\RGH0.png" />
-    <EmbeddedResource Include="Resources\Godhome\RGH1.png" />
+    <EmbeddedResource Include="Resources/Language.json" />
+    <EmbeddedResource Include="Resources/*.png" />
+    <EmbeddedResource Include="Resources/White_Palace/*.png" />
+    <EmbeddedResource Include="Resources/Godhome/*.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Condition="Exists('../SFCore/SFCore.csproj')" Include="../SFCore/SFCore.csproj" />
