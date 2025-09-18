@@ -475,12 +475,14 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
     {
         orig(self, permadeathMode, bossRushMode);
         TruncateScenesMapped();
+        // RestoreTruncatedScenesMapped();
     }
 
     private static void OnContinueGame(On.GameManager.orig_ContinueGame orig, GameManager self)
     {
         orig(self);
         TruncateScenesMapped();
+        // RestoreTruncatedScenesMapped();
     }
 
     private static readonly string[] _allScenes =
@@ -516,6 +518,93 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
                 PlayerData.instance.scenesMapped.Remove(scene);
             }
         }
+    }
+
+    private static void RestoreTruncatedScenesMapped()
+    {
+		if (PlayerData.instance.scenesMapped.Contains("Cinematic_Stag_travel")) PlayerData.instance.scenesMapped.Add("Cinematic_Stag_travel");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Town_Stag_Station")) PlayerData.instance.scenesMapped.Add("Room_Town_Stag_Station");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Charm_Shop")) PlayerData.instance.scenesMapped.Add("Room_Charm_Shop");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Mender_House")) PlayerData.instance.scenesMapped.Add("Room_Mender_House");
+		if (PlayerData.instance.scenesMapped.Contains("Room_mapper")) PlayerData.instance.scenesMapped.Add("Room_mapper");
+		if (PlayerData.instance.scenesMapped.Contains("Room_nailmaster")) PlayerData.instance.scenesMapped.Add("Room_nailmaster");
+		if (PlayerData.instance.scenesMapped.Contains("Room_nailmaster_02")) PlayerData.instance.scenesMapped.Add("Room_nailmaster_02");
+		if (PlayerData.instance.scenesMapped.Contains("Room_nailmaster_03")) PlayerData.instance.scenesMapped.Add("Room_nailmaster_03");
+		if (PlayerData.instance.scenesMapped.Contains("Room_shop")) PlayerData.instance.scenesMapped.Add("Room_shop");
+		if (PlayerData.instance.scenesMapped.Contains("Room_nailsmith")) PlayerData.instance.scenesMapped.Add("Room_nailsmith");
+		if (PlayerData.instance.scenesMapped.Contains("Room_temple")) PlayerData.instance.scenesMapped.Add("Room_temple");
+		if (PlayerData.instance.scenesMapped.Contains("Room_ruinhouse")) PlayerData.instance.scenesMapped.Add("Room_ruinhouse");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Mansion")) PlayerData.instance.scenesMapped.Add("Room_Mansion");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Tram")) PlayerData.instance.scenesMapped.Add("Room_Tram");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Tram_RG")) PlayerData.instance.scenesMapped.Add("Room_Tram_RG");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Bretta")) PlayerData.instance.scenesMapped.Add("Room_Bretta");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Fungus_Shaman")) PlayerData.instance.scenesMapped.Add("Room_Fungus_Shaman");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Ouiji")) PlayerData.instance.scenesMapped.Add("Room_Ouiji");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Jinn")) PlayerData.instance.scenesMapped.Add("Room_Jinn");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Colosseum_01")) PlayerData.instance.scenesMapped.Add("Room_Colosseum_01");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Colosseum_02")) PlayerData.instance.scenesMapped.Add("Room_Colosseum_02");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Colosseum_03")) PlayerData.instance.scenesMapped.Add("Room_Colosseum_03");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Colosseum_Bronze")) PlayerData.instance.scenesMapped.Add("Room_Colosseum_Bronze");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Colosseum_Silver")) PlayerData.instance.scenesMapped.Add("Room_Colosseum_Silver");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Colosseum_Gold")) PlayerData.instance.scenesMapped.Add("Room_Colosseum_Gold");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Slug_Shrine")) PlayerData.instance.scenesMapped.Add("Room_Slug_Shrine");
+		if (PlayerData.instance.scenesMapped.Contains("Crossroads_ShamanTemple")) PlayerData.instance.scenesMapped.Add("Crossroads_ShamanTemple");
+		if (PlayerData.instance.scenesMapped.Contains("Ruins_House_01")) PlayerData.instance.scenesMapped.Add("Ruins_House_01");
+		if (PlayerData.instance.scenesMapped.Contains("Ruins_House_02")) PlayerData.instance.scenesMapped.Add("Ruins_House_02");
+		if (PlayerData.instance.scenesMapped.Contains("Ruins_House_03")) PlayerData.instance.scenesMapped.Add("Ruins_House_03");
+		if (PlayerData.instance.scenesMapped.Contains("Fungus1_35")) PlayerData.instance.scenesMapped.Add("Fungus1_35");
+		if (PlayerData.instance.scenesMapped.Contains("Fungus1_36")) PlayerData.instance.scenesMapped.Add("Fungus1_36");
+		if (PlayerData.instance.scenesMapped.Contains("Fungus3_archive")) PlayerData.instance.scenesMapped.Add("Fungus3_archive");
+		if (PlayerData.instance.scenesMapped.Contains("Fungus3_archive_02")) PlayerData.instance.scenesMapped.Add("Fungus3_archive_02");
+		if (PlayerData.instance.scenesMapped.Contains("Cliffs_03")) PlayerData.instance.scenesMapped.Add("Cliffs_03");
+		if (PlayerData.instance.scenesMapped.Contains("RestingGrounds_07")) PlayerData.instance.scenesMapped.Add("RestingGrounds_07");
+		if (PlayerData.instance.scenesMapped.Contains("Deepnest_45_v02")) PlayerData.instance.scenesMapped.Add("Deepnest_45_v02");
+		if (PlayerData.instance.scenesMapped.Contains("Deepnest_Spider_Town")) PlayerData.instance.scenesMapped.Add("Deepnest_Spider_Town");
+		if (PlayerData.instance.scenesMapped.Contains("Room_spider_small")) PlayerData.instance.scenesMapped.Add("Room_spider_small");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Wyrm")) PlayerData.instance.scenesMapped.Add("Room_Wyrm");
+		if (PlayerData.instance.scenesMapped.Contains("Abyss_Lighthouse_room")) PlayerData.instance.scenesMapped.Add("Abyss_Lighthouse_room");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Queen")) PlayerData.instance.scenesMapped.Add("Room_Queen");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_01")) PlayerData.instance.scenesMapped.Add("White_Palace_01");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_02")) PlayerData.instance.scenesMapped.Add("White_Palace_02");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_03_hub")) PlayerData.instance.scenesMapped.Add("White_Palace_03_hub");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_04")) PlayerData.instance.scenesMapped.Add("White_Palace_04");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_05")) PlayerData.instance.scenesMapped.Add("White_Palace_05");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_06")) PlayerData.instance.scenesMapped.Add("White_Palace_06");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_07")) PlayerData.instance.scenesMapped.Add("White_Palace_07");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_08")) PlayerData.instance.scenesMapped.Add("White_Palace_08");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_09")) PlayerData.instance.scenesMapped.Add("White_Palace_09");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_11")) PlayerData.instance.scenesMapped.Add("White_Palace_11");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_12")) PlayerData.instance.scenesMapped.Add("White_Palace_12");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_13")) PlayerData.instance.scenesMapped.Add("White_Palace_13");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_14")) PlayerData.instance.scenesMapped.Add("White_Palace_14");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_15")) PlayerData.instance.scenesMapped.Add("White_Palace_15");
+		if (PlayerData.instance.scenesMapped.Contains("White_Palace_16")) PlayerData.instance.scenesMapped.Add("White_Palace_16");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_Nailcollection")) PlayerData.instance.scenesMapped.Add("Dream_Nailcollection");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_01_False_Knight")) PlayerData.instance.scenesMapped.Add("Dream_01_False_Knight");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_03_Infected_Knight")) PlayerData.instance.scenesMapped.Add("Dream_03_Infected_Knight");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_02_Mage_Lord")) PlayerData.instance.scenesMapped.Add("Dream_02_Mage_Lord");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_Guardian")) PlayerData.instance.scenesMapped.Add("Dream_Guardian");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_Guardian_Hegemol")) PlayerData.instance.scenesMapped.Add("Dream_Guardian_Hegemol");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_Guardian_Lurien")) PlayerData.instance.scenesMapped.Add("Dream_Guardian_Lurien");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_Guardian_Monomon")) PlayerData.instance.scenesMapped.Add("Dream_Guardian_Monomon");
+		if (PlayerData.instance.scenesMapped.Contains("Cutscene_Boss_Door")) PlayerData.instance.scenesMapped.Add("Cutscene_Boss_Door");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_Backer_Shrine")) PlayerData.instance.scenesMapped.Add("Dream_Backer_Shrine");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_Room_Believer_Shrine")) PlayerData.instance.scenesMapped.Add("Dream_Room_Believer_Shrine");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_Abyss")) PlayerData.instance.scenesMapped.Add("Dream_Abyss");
+		if (PlayerData.instance.scenesMapped.Contains("Dream_Final_Boss")) PlayerData.instance.scenesMapped.Add("Dream_Final_Boss");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Final_Boss_Atrium")) PlayerData.instance.scenesMapped.Add("Room_Final_Boss_Atrium");
+		if (PlayerData.instance.scenesMapped.Contains("Room_Final_Boss_Core")) PlayerData.instance.scenesMapped.Add("Room_Final_Boss_Core");
+		if (PlayerData.instance.scenesMapped.Contains("Cinematic_Ending_A")) PlayerData.instance.scenesMapped.Add("Cinematic_Ending_A");
+		if (PlayerData.instance.scenesMapped.Contains("Cinematic_Ending_B")) PlayerData.instance.scenesMapped.Add("Cinematic_Ending_B");
+		if (PlayerData.instance.scenesMapped.Contains("Cinematic_Ending_C")) PlayerData.instance.scenesMapped.Add("Cinematic_Ending_C");
+		if (PlayerData.instance.scenesMapped.Contains("Cinematic_Ending_D")) PlayerData.instance.scenesMapped.Add("Cinematic_Ending_D");
+		if (PlayerData.instance.scenesMapped.Contains("Cinematic_Ending_E")) PlayerData.instance.scenesMapped.Add("Cinematic_Ending_E");
+		if (PlayerData.instance.scenesMapped.Contains("End_Credits")) PlayerData.instance.scenesMapped.Add("End_Credits");
+		if (PlayerData.instance.scenesMapped.Contains("Cinematic_MrMushroom")) PlayerData.instance.scenesMapped.Add("Cinematic_MrMushroom");
+		if (PlayerData.instance.scenesMapped.Contains("End_Game_Completion")) PlayerData.instance.scenesMapped.Add("End_Game_Completion");
+		if (PlayerData.instance.scenesMapped.Contains("PermaDeath")) PlayerData.instance.scenesMapped.Add("PermaDeath");
+		if (PlayerData.instance.scenesMapped.Contains("PermaDeath_Unlock")) PlayerData.instance.scenesMapped.Add("PermaDeath_Unlock");
+		if (PlayerData.instance.scenesMapped.Contains("Deepnest_East_17")) PlayerData.instance.scenesMapped.Add("Deepnest_East_17");
     }
 
     private void OnSceneManagerAddSceneMapped(ILContext il)
@@ -735,6 +824,44 @@ public class AdditionalMaps : FullSettingsMod<AmSaveSettings, AmGlobalSettings>
         if (!self.FsmName.Equals("UI Control") || !self.gameObject.name.Equals("World Map")) return;
         ChangeWpMap(self.gameObject, self.transform.GetChild(4).gameObject);
         ChangeGhMap(self.gameObject, self.transform.GetChild(4).gameObject);
+        if (PlayerData.instance.GetBool("whitePalaceMidWarp"))
+        {
+            // reached halfway point, add scenes to scenesvisited if not already there
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_11")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_11");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_01")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_01");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_02")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_02");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_03_hub")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_03_hub");
+        }
+        if (PlayerData.instance.GetBool("whitePalaceOrb_2"))
+        {
+            // reached right orb, add those scenes
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_15")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_15");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_05")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_05");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_16")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_16");
+        }
+        if (PlayerData.instance.GetBool("whitePalaceOrb_3"))
+        {
+            // reached left orb, add those scenes
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_04")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_04");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_14")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_14");
+        }
+        if (PlayerData.instance.GetBool("gotKingFragment"))
+        {
+            // king half of kingsoul found, add those scenes
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_06")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_06");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_07")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_07");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_12")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_12");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_13")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_13");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_09")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_09");
+        }
+        if (PlayerData.instance.GetBool("killedBindingSeal"))
+        {
+            // path of pain done, add those scenes
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_18")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_18");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_17")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_17");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_19")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_19");
+            if (!PlayerData.instance.GetVariable<List<string>>("scenesVisited").Contains("White_Palace_20")) PlayerData.instance.GetVariable<List<string>>("scenesVisited").Add("White_Palace_20");
+        }
     }
 
     #region Get/Set Hooks
